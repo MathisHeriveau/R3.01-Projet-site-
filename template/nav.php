@@ -21,7 +21,8 @@
     echo "</section>";
     // Connexion à la base de données
     $FICHIER_BD = "../BD";
-    $db = new PDO('sqlite:' . $FICHIER_BD);
+    //$db = new PDO('sqlite:' . $FICHIER_BD);
+    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Requête pour récupérer les CD
@@ -29,13 +30,7 @@
     $req->execute();
 
     // Affichage les titres des 5 premiers CD
-    echo "<section class='suggestions'>";
-    for ($i = 0; $i < 5; $i++) {
-        $row = $req->fetch();
-        echo "<option class='suggestion
-            '>" . $row['titre'] . "</option>";
-    }
-    echo "</section>";
+    
 
     echo "<section class='profil'>";
     if($connecte){
@@ -67,7 +62,9 @@
 
     // Connexion à la base de données
     $FICHIER_BD = "../BD";
-    $db = new PDO('sqlite:' . $FICHIER_BD);
+    //$db = new PDO('sqlite:' . $FICHIER_BD);
+    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
+
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Requête pour récupérer les CD

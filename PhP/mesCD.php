@@ -1,5 +1,9 @@
 <?php
 session_start();
+$FICHIER_BD = "../BD";
+//$db = new PDO('sqlite:' . $FICHIER_BD);
+$db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 ?>
 <html>
 <head>
@@ -33,12 +37,9 @@ session_start();
                 <select name="genre">
                     <option value="Tous">Tous</option>
                     <?php
+                    
 
-                    $FICHIER_BD = "../BD";
-                    $db = new PDO('sqlite:' . $FICHIER_BD);
-                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                    $requete = "SELECT * FROM Genre";
+                    $requete = "SELECT * FROM genre";
                     $resultat = $db->query($requete);
                     $genres = $resultat->fetchAll();
 
@@ -86,8 +87,10 @@ session_start();
 
                     // 3 - Connexion à la base de données ;
                     $FICHIER_BD = "../BD";
-                    $db = new PDO('sqlite:' . $FICHIER_BD);
+                    //$db = new PDO('sqlite:' . $FICHIER_BD);
+                    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    
 
                     // Vérification de doublon
                     $sql = "SELECT * FROM CD WHERE titre = :titre AND auteur = :artiste";
@@ -142,12 +145,10 @@ session_start();
             <form>
                 <label for="auteur">Auteur:</label>
                 <input type="text" name="titre" id="titre" <?php if(isset($_GET['titre'])){echo "value='".$_GET['titre']."'";}?>>
-                <label for="genre">Genre:</label>
+                <label for="genre">Genre :</label>        
                 <select name="genre" id="genre">
                     <?php
-                    $FICHIER_BD = "../BD";
-                    $db = new PDO('sqlite:' . $FICHIER_BD);
-                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    
 
                     $req = $db->prepare("SELECT * FROM genre");
                     $req->execute();
@@ -246,30 +247,32 @@ session_start();
         <article class="shop-grid">
             <?php
             $FICHIER_BD = "../BD";
-            $db = new PDO('sqlite:' . $FICHIER_BD);
+            //$db = new PDO('sqlite:' . $FICHIER_BD);
+            $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            //titre=An%27om&genre=Tous&min=50&max=150
             if(isset($_GET['titre']) && isset($_GET['genre']) && isset($_GET['min']) && isset($_GET['max'])){
-                $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and genre == :genre and auteur like :titre and idUser == :idUser");
-                $req->execute(array(
-                    'titre' => '%'.$_GET['titre'].'%',
-                    'min' => $_GET['min'],
-                    'max' => $_GET['max'],
-                    'genre' => strval($_GET['genre']),
-                    'idUser' => $_SESSION['id']
-                ));
+            
                 if($_GET['genre']=='Tous'){
-                    $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and auteur like :titre and idUser == :idUser");
+                    $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and auteur like :titre and idUser = :idUser");
                     $req->execute(array(
                         'titre' => '%'.$_GET['titre'].'%',
                         'min' => $_GET['min'],
                         'max' => $_GET['max'],
                         'idUser' => $_SESSION['id']
                     ));
+                }else{
+                    $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and genre = :genre and auteur like :titre and idUser = :idUser");
+                    $req->execute(array(
+                    'titre' => '%'.$_GET['titre'].'%',
+                    'min' => $_GET['min'],
+                    'max' => $_GET['max'],
+                    'genre' => strval($_GET['genre']),
+                    'idUser' => $_SESSION['id']
+                ));
                 }
 
             }else{
-                $req = $db->prepare("SELECT * FROM CD where idUser == :idUser");
+                $req = $db->prepare("SELECT * FROM CD where idUser = :idUser");
                 $req->execute(array(
                     'idUser' => $_SESSION['id']
                 ));

@@ -33,20 +33,10 @@ if (isset($_GET['retour'])) {
     <main>
         <article class="shop-grid">
             <?php
-                $FICHIER_BD = "../BD";
-            //$db = new PDO('sqlite:' . $FICHIER_BD);
-            //$db = new PDO("mysql:host=$servername;dbname=bddtest" $username, $password);
-                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 //titre=An%27om&genre=Tous&min=50&max=150
                 if(isset($_GET['titre']) && isset($_GET['genre']) && isset($_GET['min']) && isset($_GET['max'])){
-                    $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and genre == :genre and auteur like :titre");
-                    $req->execute(array(
-                        'titre' => '%'.$_GET['titre'].'%',
-                        'min' => $_GET['min'],
-                        'max' => $_GET['max'],
-                        'genre' => strval($_GET['genre'])
-                    ));
+                   
                     if($_GET['genre']=='Tous'){
                         $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and auteur like :titre");
                         $req->execute(array(
@@ -54,7 +44,13 @@ if (isset($_GET['retour'])) {
                             'min' => $_GET['min'],
                             'max' => $_GET['max']
                         ));
-                    }
+                    }else{ $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and genre == :genre and auteur like :titre");
+                        $req->execute(array(
+                            'titre' => '%'.$_GET['titre'].'%',
+                            'min' => $_GET['min'],
+                            'max' => $_GET['max'],
+                            'genre' => strval($_GET['genre'])
+                        ));}
 
                 }else{
                     $req = $db->prepare("SELECT * FROM CD");
@@ -86,7 +82,8 @@ if (isset($_GET['retour'])) {
                     <select name="genre" id="genre">
                         <?php
                             $FICHIER_BD = "../BD";
-                            $db = new PDO('sqlite:' . $FICHIER_BD);
+                            //$db = new PDO('sqlite:' . $FICHIER_BD);
+                            $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
                             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                             $req = $db->prepare("SELECT * FROM genre");

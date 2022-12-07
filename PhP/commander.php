@@ -9,7 +9,8 @@
 
     // Si le panier est vide, on redirige vers la page d'accueil
     $FICHIER_BD = "../BD";
-    $db = new PDO('sqlite:' . $FICHIER_BD);
+    //$db = new PDO('sqlite:' . $FICHIER_BD);
+    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $query = "SELECT * FROM panier where idUser = :id_client";
@@ -118,13 +119,13 @@
             }
 
             // Vérifier que la commande n'existe pas déjà
-            $req = $db->prepare("SELECT * FROM commande where idClient = :id");
+            $req = $db->prepare("SELECT * FROM Commande where idClient = :id");
             $req->execute(array(
                 'id' => $_SESSION['id']
             ));
 
             // Création de la commande
-            $req = $db->prepare("INSERT INTO commande (idCommande, idClient, dateCommande, dateLivraison, adresseLivraison, prixTotal) VALUES (NULL, :id, :dateCommande, :dateLivraison, :adresseLivraison, :prixTotal)");
+            $req = $db->prepare("INSERT INTO Commande (idCommande, idClient, dateCommande, dateLivraison, adresseLivraison, prixTotal) VALUES (NULL, :id, :dateCommande, :dateLivraison, :adresseLivraison, :prixTotal)");
             $req->execute(array(
                 'id' => $_SESSION['id'],
                 'dateCommande' => date("Y-m-d"),

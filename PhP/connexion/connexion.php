@@ -1,5 +1,39 @@
 <?php
  session_start();
+
+
+ if(isset($_GET['connexion'])){
+    // Si tous les champs sont remplis
+    if(empty($_GET['login']) || empty($_GET['password'])){
+        echo "<p class='erreur'>Veuillez remplir tous les champs</p>";
+    }
+    else{
+        $FICHIER_BD = "../../BD";
+        //$db = new PDO('sqlite:' . $FICHIER_BD);
+        $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $req = $db->prepare("SELECT * FROM users where login = :login and password = :password");
+        $req->execute(array(
+            'login' => $_GET['login'],
+            'password' => $_GET['password']
+        ));
+        $resultat = $req->fetch();
+
+        if($resultat){
+            $_SESSION['id'] = $resultat['id'];
+            $_SESSION['login'] = $_GET['login'];
+            if(isset($_GET['souvenir'])){
+                setcookie('login', $_GET['login'], time() + 365*24*3600, null, null, false, true);
+
+            }
+
+            header ("Location: ../index.php");
+        }
+        else{
+            echo "<p class='erreur'>Login ou mot de passe incorrect</p>";
+        }
+    }
+}
 ?>
 <html>
 <head>
@@ -32,40 +66,6 @@
                                 <a href="inscription.php">Creer un compte ?</a>
                             </div>
                         </div>
-                        <?php
-                            if(isset($_GET['connexion'])){
-                                // Si tous les champs sont remplis
-                                if(empty($_GET['login']) || empty($_GET['password'])){
-                                    echo "<p class='erreur'>Veuillez remplir tous les champs</p>";
-                                }
-                                else{
-                                    $FICHIER_BD = "../../BD";
-                                    $db = new PDO('sqlite:' . $FICHIER_BD);
-                                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                                    $req = $db->prepare("SELECT * FROM users where login = :login and password = :password");
-                                    $req->execute(array(
-                                        'login' => $_GET['login'],
-                                        'password' => $_GET['password']
-                                    ));
-                                    $resultat = $req->fetch();
-
-                                    if($resultat){
-                                        echo "<p class='succes'>Connexion réussie</p>";
-                                        $_SESSION['id'] = $resultat['id'];
-                                        $_SESSION['login'] = $_GET['login'];
-                                        if(isset($_GET['souvenir'])){
-                                            setcookie('login', $_GET['login'], time() + 365*24*3600, null, null, false, true);
-
-                                        }
-
-                                        header ("Location: ../index.php");
-                                    }
-                                    else{
-                                        echo "<p class='erreur'>Login ou mot de passe incorrect</p>";
-                                    }
-                                }
-                            }
-                        ?>
 
                         <button type="submit" class="btn btn-primary" name="connexion">Connexion</button>
 

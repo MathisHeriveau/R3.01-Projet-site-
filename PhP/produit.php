@@ -2,6 +2,7 @@
     if(!isset($_GET['id'])){
         header("Location: ../index.php");
     }
+    session_start();
 ?>
 <html>
 <head>
@@ -20,7 +21,8 @@
         <section class="produit">
             <?php
                 $FICHIER_BD = "../BD";
-                $db = new PDO('sqlite:' . $FICHIER_BD);
+                //$db = new PDO('sqlite:' . $FICHIER_BD);
+                $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 $req = $db->prepare("SELECT * FROM CD WHERE id = :id");

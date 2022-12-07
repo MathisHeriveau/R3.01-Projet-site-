@@ -30,7 +30,8 @@
        <?php
 
            $FICHIER_BD = "../BD";
-           $db = new PDO('sqlite:' . $FICHIER_BD);
+           //$db = new PDO('sqlite:' . $FICHIER_BD);
+           $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $req = $db->prepare("SELECT * FROM panier where idUser = :id");
@@ -43,7 +44,7 @@
             $cd = $db->prepare("SELECT * FROM CD where id = :id");
 
             // Si le panier est vide
-            if (!$req->rowCount() == 0) {
+            if ($req->rowCount() == 0) {
                 echo "<h1>Votre panier est vide</h1>";
             } else {
                 while ($row = $req->fetch()) {

@@ -1,7 +1,8 @@
 <?php
     // Ouverture de la BD
     $FICHIER_BD = "../BD";
-    $db = new PDO('sqlite:' . $FICHIER_BD);
+    //$db = new PDO('sqlite:' . $FICHIER_BD);
+    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Récupération de l'id de l'image
