@@ -1,0 +1,19 @@
+Site web de vente de CD :
+
+
+Fonctionnalité :
+- Afficher l'ensemble des CD (Vignette de la pochette, titre, auteur/groupe). 
+  ° Lors de la selection d'un titre, on verra la pochette en taille réelle ainsi que l'ensemble des informations relatives au CD
+- Sélection et de mise en panier. ( Paiment en verifiant la saisie des 16 chiffres et verifiant que le dernier est identique au premier,
+ ° et que la date de validité est supérieure a la date du jour +3 mois)
+- Proposer un accès sécurisé avec un back-office permettant l’ajout/suppression de CDs
+
+
+Base de données :
+- CD : id primary key, titre, auteur, prix, description, image, quantite, genre (foreign key)
+- user : id primary key, login, password
+- panier : idCD, idUser
+
+
+
+

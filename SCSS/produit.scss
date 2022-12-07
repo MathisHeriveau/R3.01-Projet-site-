@@ -1,0 +1,116 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+main{
+  display: grid;
+  grid-template-columns: 90% 10%;
+
+}
+
+.produit{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  width: 100%;
+
+  .produit-image{
+    width: 38%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+  }
+  .produit-description{
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    width: 58%;
+    height: 100%;
+    justify-content: space-around;
+
+
+    h1{
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    h3{
+      font-size: 2rem;
+      font-weight: 700;
+      padding-top: 1%;
+    }
+    h4{
+      font-weight: 400;
+      margin: 0;
+    }
+    p{
+      font-size: 1.1rem;
+      font-weight:900;
+      margin: 0;
+    }
+
+    input{
+      width: min-content;
+      height: 2rem;
+      border: 1px solid var(--couleurTrait);
+      border-radius: 5px;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+    }
+    label{
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin: 0;
+      padding-top: 20px;
+    }
+    #prix{
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    button{
+      width: 80%;
+      height: 3rem;
+      border-radius: 5px;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      &[name="buy"]{
+        background-color: var(--couleurBouton);
+        color: var(--couleurTexte2);
+        &:hover{
+          background-color: var(--couleurTexte2);
+          color: var(--couleurBouton);
+        }
+      }
+        &[name="add"]{
+          width: 60%;
+          background-color: var(--couleurTexte2);
+          color: var(--couleurBouton);
+          &:hover{
+            background-color: var(--couleurBouton);
+            color: var(--couleurTexte2);
+          }
+        }
+    }
+
+
+  }
+
+
+}
