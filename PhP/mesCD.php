@@ -145,7 +145,7 @@ session_start();
                 <label for="genre">Genre:</label>
                 <select name="genre" id="genre">
                     <?php
-                    $FICHIER_BD = "../../BD";
+                    $FICHIER_BD = "../BD";
                     $db = new PDO('sqlite:' . $FICHIER_BD);
                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -245,7 +245,7 @@ session_start();
         <!-- Liste des CD -->
         <article class="shop-grid">
             <?php
-            $FICHIER_BD = "../../BD";
+            $FICHIER_BD = "../BD";
             $db = new PDO('sqlite:' . $FICHIER_BD);
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             //titre=An%27om&genre=Tous&min=50&max=150

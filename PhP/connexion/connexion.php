@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet/less" type="text/css" href="connexion.scss"/>
+    <link rel="stylesheet/less" type="text/css" href="../../SCSS/connexion.scss"/>
     <link rel="stylesheet/less" type="text/css" href="../../SCSS/pallette.scss"/>
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
     <title>Connexion</title>
@@ -27,7 +27,10 @@
                                 <input type="checkbox" name="souvenir" id="souvenir">
                                 <label for="souvenir">Se souvenir de moi</label>
                             </div>
-                            <a href="motdepasseoublie.php">Mot de passe oublié ?</a>
+                            <div class="oubliCreer">
+                                <a href="motdepasseoublie.php">Mot de passe oublié ?</a>
+                                <a href="inscription.php">Creer un compte ?</a>
+                            </div>
                         </div>
                         <?php
                             if(isset($_GET['connexion'])){
