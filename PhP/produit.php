@@ -19,7 +19,7 @@
     <main>
         <section class="produit">
             <?php
-                $FICHIER_BD = "../../BD";
+                $FICHIER_BD = "../BD";
                 $db = new PDO('sqlite:' . $FICHIER_BD);
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

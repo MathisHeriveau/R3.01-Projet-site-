@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet/less" type="text/css" href="connexion.scss"/>
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/pallette.scss"/>
+    <link rel="stylesheet/less" type="text/css" href="../../SCSS/pallette.scss"/>
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
     <title>Connexion</title>
 </head>
@@ -36,7 +36,7 @@
                                     echo "<p class='erreur'>Veuillez remplir tous les champs</p>";
                                 }
                                 else{
-                                    $FICHIER_BD = "../../../BD";
+                                    $FICHIER_BD = "../../BD";
                                     $db = new PDO('sqlite:' . $FICHIER_BD);
                                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                                     $req = $db->prepare("SELECT * FROM users where login = :login and password = :password");

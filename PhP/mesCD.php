@@ -34,7 +34,7 @@ session_start();
                     <option value="Tous">Tous</option>
                     <?php
 
-                    $FICHIER_BD = "../../BD";
+                    $FICHIER_BD = "../BD";
                     $db = new PDO('sqlite:' . $FICHIER_BD);
                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -85,7 +85,7 @@ session_start();
                     }
 
                     // 3 - Connexion à la base de données ;
-                    $FICHIER_BD = "../../BD";
+                    $FICHIER_BD = "../BD";
                     $db = new PDO('sqlite:' . $FICHIER_BD);
                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -287,6 +287,7 @@ session_start();
                 echo "<button type='button' onclick='window.location.href=\"GererCD/removeCD.php?id=" . $row['id'] . "\"'>Supprimer</button>";
                 echo "</section>";
             }
+
 
 
             $db = null;

@@ -6,7 +6,7 @@ if(isset($_SESSION['id']) && isset($_GET['idProduit']) && isset($_GET['quantite'
     $quantite = $_GET['quantite'];
 
 
-    $FICHIER_BD = "../../../BD";
+    $FICHIER_BD = "../../BD";
     $db = new PDO('sqlite:' . $FICHIER_BD);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

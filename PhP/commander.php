@@ -8,7 +8,7 @@
     }
 
     // Si le panier est vide, on redirige vers la page d'accueil
-    $FICHIER_BD = "../../BD";
+    $FICHIER_BD = "../BD";
     $db = new PDO('sqlite:' . $FICHIER_BD);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

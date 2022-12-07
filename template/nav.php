@@ -20,7 +20,7 @@
     echo "<input type='text' class='search' name='search' placeholder='Rechercher...'/>";
     echo "</section>";
     // Connexion à la base de données
-    $FICHIER_BD = "../../BD";
+    $FICHIER_BD = "../BD";
     $db = new PDO('sqlite:' . $FICHIER_BD);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -66,7 +66,7 @@
     echo "</nav>";
 
     // Connexion à la base de données
-    $FICHIER_BD = "../../BD";
+    $FICHIER_BD = "../BD";
     $db = new PDO('sqlite:' . $FICHIER_BD);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
