@@ -1,19 +1,19 @@
 <?php
  session_start();
-
+ $erreur = "";
 
  if(isset($_GET['connexion'])){
     // Si tous les champs sont remplis
     if(empty($_GET['login']) || empty($_GET['password'])){
-        echo "<p class='erreur'>Veuillez remplir tous les champs</p>";
+        $erreur = "Veuillez remplir tous les champs";
     }
     else{
         include '../BD/BD.php';
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $password = hash('sha256', $_GET['password']);
         $req = $db->prepare("SELECT * FROM users where login = :login and password = :password");
         $req->execute(array(
             'login' => $_GET['login'],
-            'password' => $_GET['password']
+            'password' => $password
         ));
         $resultat = $req->fetch();
 
@@ -28,7 +28,7 @@
             header ("Location: ../index.php");
         }
         else{
-            echo "<p class='erreur'>Login ou mot de passe incorrect</p>";
+            $erreur = "Login ou mot de passe incorrect";
         }
     }
 }
@@ -60,10 +60,18 @@
                                 <label for="souvenir">Se souvenir de moi</label>
                             </div>
                             <div class="oubliCreer">
-                                <a href="motdepasseoublie.php">Mot de passe oublié ?</a>
+                                <a href="mdpOublie.php">Mot de passe oublié ?</a>
                                 <a href="inscription.php">Creer un compte ?</a>
                             </div>
                         </div>
+                        
+                        <?php 
+                            if ($erreur != ""){
+                                echo "<p class='erreur'>
+                                $erreur
+                                </p>";
+                            }
+                        ?>
 
                         <button type="submit" class="btn btn-primary" name="connexion">Connexion</button>
 

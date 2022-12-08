@@ -1,5 +1,11 @@
 <?php
  session_start();
+ // Montrer toutes les variables de session
+
+ if (isset($_GET['inscription'])) 
+ {
+    header('Location: confirmation.php');
+ }
 
 ?>
 <html>
@@ -59,8 +65,8 @@
                                         // On vérifie que l'email est valide
                                         if(filter_var($email, FILTER_VALIDATE_EMAIL)){
                                             include '../BD/BD.php';
-                                            $query = $db->prepare("SELECT * FROM users WHERE login = :login");
-                                            $query->execute(['login' => $login]);
+                                            $query = $db->prepare("SELECT * FROM users WHERE login = :login and email = :email");
+                                            $query->execute(['login' => $login, 'email' => $email]);
                                             $result = $query->fetch();
                                             if($result){
                                                 echo "L'utilisateur existe déjà";
@@ -68,18 +74,22 @@
                                                 // Envoie d'un mail de confirmation
                                                 $to = $email;
                                                 $subject = "Confirmation d'inscription";
-                                                $message = "Bonjour, vous venez de vous inscrire sur le site CDVente. Pour confirmer votre inscription, veuillez saisir le code suivant : ";
+                                                $message = "Bonjour,\nVous venez de vous inscrire sur le site CDVente. ";
                                                 $code = rand(100000, 999999);
-                                                $message .= $code;
-                                                $message .= " . Si vous n'êtes pas à l'origine de cette inscription, veuillez ignorer ce mail.";
+                                                $message .= "Pour confirmer votre inscription, veuillez saisir le code suivant : " . $code . ".\n";
+                                                $message .= "Si vous n'êtes pas à l'origine de cette inscription, veuillez ignorer ce mail.";
                                                 $message = wordwrap($message, 70, "\r \n");
                                                 $headers = "From: cdVente@iutbayonne.univ-pau.fr";
-                                                mail($to, $subject, $message, $headers);
+                                                if (mail($to, $subject, $message, $headers)) {
+                                                    echo "Un mail de confirmation vous a été envoyé.";
+                                                } else {
+                                                    echo "Une erreur est survenue lors de l'envoie du mail.";
+                                                }
+
                                                 $_SESSION['code'] = $code;
                                                 $_SESSION['login'] = $login;
                                                 $_SESSION['password'] = hash('sha256', $password);
                                                 $_SESSION['email'] = $email;
-                                                header('Location: confirmation.php');
                                             }
                                         }else{
                                             echo "L'email n'est pas valide";
