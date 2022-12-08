@@ -1,5 +1,6 @@
 <?php
  session_start();
+
 ?>
 <html>
 <head>
@@ -53,50 +54,38 @@
 
                                 // On vérifie que les champs ne sont pas vides
                                 if(!empty($login) && !empty($password) && !empty($confPassword) && !empty($email)){
-                                    if($password != $confPassword) {
-                                        echo "Les mots de passe ne correspondent pas";
-                                    }
-                                    else{
-                                        // Connexion à la base de données
-                                        include '../BD/BD.php';
-                                        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                                        // On vérifie que le login n'est pas déjà utilisé
-                                        $req = $db->prepare("SELECT count(*) FROM users WHERE login = :login");
-                                        $req->execute(array('login' => $login));
-                                        $row = $req->fetch();
-
-                                        $req2 = $db->prepare("SELECT count(*) FROM users WHERE email = :email");
-                                        $req2->execute(array('email' => $email));
-                                        $row2 = $req2->fetch();
-
-                                        if($row[0] == 0 && $row2[0] == 0){
-                                            // On ajoute l'utilisateur à la base de données
-                                            $req = $db->prepare("INSERT INTO users (login, password, email) VALUES (:login, :password, :email)");
-                                            $req->execute(array('login' => $login, 'password' => $password, 'email' => $email));
-
-                                            // On récupère l'id de l'utilisateur
-                                            $req = $db->prepare("SELECT id FROM users WHERE login = :login");
-                                            $req->execute(array('login' => $login));
-                                            $resultat = $req->fetch();
-                                            $_SESSION['id'] = $resultat['id'];
-                                            $_SESSION['login'] = $_GET['login'];
-                                            if(isset($_GET['pub'])){
-                                                setcookie('login', $_GET['login'], time() + 365*24*3600, null, null, false, true);
+                                    // On vérifie que les mots de passe sont identiques
+                                    if($password == $confPassword){
+                                        // On vérifie que l'email est valide
+                                        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+                                            include '../BD/BD.php';
+                                            $query = $db->prepare("SELECT * FROM users WHERE login = :login");
+                                            $query->execute(['login' => $login]);
+                                            $result = $query->fetch();
+                                            if($result){
+                                                echo "L'utilisateur existe déjà";
+                                            }else{
+                                                // Envoie d'un mail de confirmation
+                                                $to = $email;
+                                                $subject = "Confirmation d'inscription";
+                                                $message = "Bonjour, vous venez de vous inscrire sur le site CDVente. Pour confirmer votre inscription, veuillez saisir le code suivant : ";
+                                                $code = rand(100000, 999999);
+                                                $message .= $code;
+                                                $message .= " . Si vous n'êtes pas à l'origine de cette inscription, veuillez ignorer ce mail.";
+                                                $message = wordwrap($message, 70, "\r \n");
+                                                $headers = "From: cdVente@iutbayonne.univ-pau.fr";
+                                                mail($to, $subject, $message, $headers);
+                                                $_SESSION['code'] = $code;
+                                                $_SESSION['login'] = $login;
+                                                $_SESSION['password'] = hash('sha256', $password);
+                                                $_SESSION['email'] = $email;
+                                                header('Location: confirmation.php');
                                             }
-                                            // On redirige vers la page de connexion
-                                            header("Location: connexion.php");
+                                        }else{
+                                            echo "L'email n'est pas valide";
                                         }
-                                        elseif($row[0] != 0){
-                                            echo "Le login est déjà utilisé";
-                                        }
-                                        elseif($row2[0] != 0){
-                                            echo "L'email est déjà utilisé";
-                                        }
-                                        else{
-                                            echo "Une erreur est survenue";
-                                        }
-
+                                    }else{
+                                        echo "Les mots de passe ne sont pas identiques";
                                     }
                                 }else{
                                     echo "Veuillez remplir tous les champs";

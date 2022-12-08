@@ -26,5 +26,15 @@ d’IMG SRC.<br><br>
 <ul>
     <li>Etape 1 : Cloner le projet sur votre machine</li>
     <li>Etape 2 : Ouvrir le projet dans PhpStorm</li>
-    <li>Etape 3 : Si la base de données BD est vide, lancer le script SQL dans la console BD</li>
+    <li>Etape 3 : Si ce n'est pas fait, dans le fichier situé dans PhP/BD/BD.php<br> 
+        - Décommenter la ligne "$db = new PDO('sqlite:' . $path);" en enlevant les slashs <br>
+        - Ajouter les slashs sur la ligne "$db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");"  </li>
+</ul>
+
+<p>Pour les étudiants ou enseigants ayant accès au serveur lakartxela, une base de données a été créé sur le server</p>
+<ul>
+    <li>Il suffit de me demander de modifier l'accès à la base de données pour que vous puissiez y accéder si ce n'est pas fait</li>
+    <li>Si vous n'avez pas accès au serveur lakartxela, vous pouvez utiliser la base de données en local</li>
+    <li>Site web sur l'url : <br> http://lakartxela.iutbayonne.univ-pau.fr/~mheriveau/s3/PHP/R3.01-Projet-site-/PhP/</li>
+
 </ul>
