@@ -8,9 +8,7 @@
         echo "<p class='erreur'>Veuillez remplir tous les champs</p>";
     }
     else{
-        $FICHIER_BD = "../../BD";
-        //$db = new PDO('sqlite:' . $FICHIER_BD);
-        $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
+        include '../BD/BD.php';
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $req = $db->prepare("SELECT * FROM users where login = :login and password = :password");
         $req->execute(array(

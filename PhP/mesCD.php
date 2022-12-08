@@ -1,9 +1,7 @@
 <?php
 session_start();
-$FICHIER_BD = "../BD";
-//$db = new PDO('sqlite:' . $FICHIER_BD);
-$db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+include 'BD/BD.php';
 ?>
 <html>
 <head>
@@ -86,11 +84,7 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     }
 
                     // 3 - Connexion à la base de données ;
-                    $FICHIER_BD = "../BD";
-                    //$db = new PDO('sqlite:' . $FICHIER_BD);
-                    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    
+                    include 'BD/BD.php';
 
                     // Vérification de doublon
                     $sql = "SELECT * FROM CD WHERE titre = :titre AND auteur = :artiste";
@@ -246,10 +240,7 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         <!-- Liste des CD -->
         <article class="shop-grid">
             <?php
-            $FICHIER_BD = "../BD";
-            //$db = new PDO('sqlite:' . $FICHIER_BD);
-            $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            include 'BD/BD.php';
             if(isset($_GET['titre']) && isset($_GET['genre']) && isset($_GET['min']) && isset($_GET['max'])){
             
                 if($_GET['genre']=='Tous'){

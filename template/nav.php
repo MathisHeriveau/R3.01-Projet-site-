@@ -20,10 +20,7 @@
     echo "<input type='text' class='search' name='search' placeholder='Rechercher...'/>";
     echo "</section>";
     // Connexion à la base de données
-    $FICHIER_BD = "../BD";
-    //$db = new PDO('sqlite:' . $FICHIER_BD);
-    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    include '../PhP/BD/BD.php';
 
     // Requête pour récupérer les CD
     $req = $db->prepare("SELECT titre FROM CD");
@@ -61,11 +58,7 @@
     echo "</nav>";
 
     // Connexion à la base de données
-    $FICHIER_BD = "../BD";
-    //$db = new PDO('sqlite:' . $FICHIER_BD);
-    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    include '../PhP/BD/BD.php';
 
     // Requête pour récupérer les CD
     $req = $db->prepare("SELECT titre FROM CD");

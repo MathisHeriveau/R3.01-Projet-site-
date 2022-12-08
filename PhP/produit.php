@@ -20,10 +20,7 @@
     <main>
         <section class="produit">
             <?php
-                $FICHIER_BD = "../BD";
-                //$db = new PDO('sqlite:' . $FICHIER_BD);
-                $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                include 'BD/BD.php';
 
                 $req = $db->prepare("SELECT * FROM CD WHERE id = :id");
                 $req->bindParam(':id', $_GET['id']);

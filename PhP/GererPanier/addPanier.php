@@ -6,10 +6,7 @@ if(isset($_SESSION['id']) && isset($_GET['idProduit']) && isset($_GET['quantite'
     $quantite = $_GET['quantite'];
 
 
-    $FICHIER_BD = "../../BD";
-    //$db = new PDO('sqlite:' . $FICHIER_BD);
-    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    include '../BD/BD.php';
 
     // On vérifie si l'utilisateur a déjà un panier
     $req = $db->prepare("SELECT * FROM panier where idUser = :idUser");

@@ -8,10 +8,7 @@
     }
 
     // Si le panier est vide, on redirige vers la page d'accueil
-    $FICHIER_BD = "../BD";
-    //$db = new PDO('sqlite:' . $FICHIER_BD);
-    $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    include 'BD/BD.php';
 
     $query = "SELECT * FROM panier where idUser = :id_client";
     $stmt = $db->prepare($query);

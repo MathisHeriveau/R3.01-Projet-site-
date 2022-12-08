@@ -58,9 +58,7 @@
                                     }
                                     else{
                                         // Connexion à la base de données
-                                        $FICHIER_BD = "../../BD";
-                                        //$db = new PDO('sqlite:' . $FICHIER_BD);
-                                        $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
+                                        include '../BD/BD.php';
                                         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                                         // On vérifie que le login n'est pas déjà utilisé

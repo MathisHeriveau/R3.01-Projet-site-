@@ -81,10 +81,7 @@ if (isset($_GET['retour'])) {
                     <label for="genre">Genre</label>
                     <select name="genre" id="genre">
                         <?php
-                            $FICHIER_BD = "../BD";
-                            //$db = new PDO('sqlite:' . $FICHIER_BD);
-                            $db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
-                            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                            include 'BD/BD.php';
 
                             $req = $db->prepare("SELECT * FROM genre");
                             $req->execute();
