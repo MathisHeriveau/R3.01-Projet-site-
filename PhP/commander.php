@@ -21,7 +21,7 @@
         header('Location:index.php?retour=');
     }
 
-    ?>
+?>
 <html>
 <head>
     <meta charset="utf-8">
@@ -181,31 +181,30 @@
             echo "<h2>Paiement</h2>";
             echo "<div class='carte'>";
             echo "<label for='numeroCarte'>Numéro de carte</label>";
-            if (isset($_GET['numeroCarte'])) {
-                echo "<p class='erreur'>".$_GET['numeroCarte']."</p>";
+            if (paiementValide()) {
+                echo "<p>".$_GET['numeroCarte']."</p>";
+                echo "<label for='dateExpiration'>Date d'expiration</label>";
+                echo "<p>".$_GET['dateExpiration']."</p>";
+                echo "<label for='cryptogramme'>Cryptogramme</label>";
+                echo "<p>".$_GET['cryptogramme']."</p>";
+
             }
             else{
                 echo "<input type='text' name='numeroCarte' id='numeroCarte' required maxlength='16' pattern='[0-9]{16}'>";
-            }
-            echo "<label for='dateExpiration'>Date d'expiration</label>";
-            if (isset($_GET['dateExpiration'])) {
-                echo "<p class='erreur'>".$_GET['dateExpiration']."</p>";
-            }
-            else{
+                echo "<label for='dateExpiration'>Date d'expiration</label>";
                 echo "<input type='month' name='dateExpiration' id='dateExpiration' required>";
-            }
-            echo "<label for='cryptogramme'>Cryptogramme</label>";
-            if (isset($_GET['cryptogramme'])) {
-                echo "<p class='erreur'>".$_GET['cryptogramme']."</p>";
-            }
-            else{
+                echo "<label for='cryptogramme'>Cryptogramme</label>";
                 echo "<input type='text' name='cryptogramme' id='cryptogramme' required maxlength='3' pattern='[0-9]{3}'>";
             }
             echo "</div>";
-            echo "<input type='submit' value='Payer'>";
+            if (!paiementValide()) {
+                echo "<p class='erreur'>Le numéro de carte doit avoir le premier et le dernier chiffre identique</p>";
+                echo "<p class='erreur'>La date doit être supérieure à la date actuelle + 3 mois</p>";
+            }
+            echo "<input type='submit' name ='payer' value='Payer'>";
             echo "</form>";
 
-            if(!isset($_GET['numeroCarte'])){
+            if(isset($_GET['submit'])){
                 // Récupération des données dans un session
                 $_SESSION['nom'] = $_GET['nom'];
                 $_SESSION['prenom'] = $_GET['prenom'];
@@ -218,7 +217,31 @@
             }
 
         }
-        if (isset($_GET['numeroCarte']) && isset($_GET['dateExpiration']) && isset($_GET['cryptogramme']) && !$vide) {
+        ?>
+
+        <?php
+            function paiementValide(){
+                if(isset($_GET['numeroCarte'])){
+                    if($_GET['numeroCarte'][0] == $_GET['numeroCarte'][15]){
+                        $dateLimite = date('Y-m', strtotime('+3 months'));
+                        if($_GET['dateExpiration'] > $dateLimite){
+                            return true;
+                        }
+                        else{
+                            // Erreur date d'expiration situé sous le titre paiement
+                            return false;
+                        }
+
+                    }
+                    else{
+                        return false;
+                    }
+                }
+            }
+        ?>
+
+        <?php
+        if (paiementValide() && isset($_GET['payer'])) {
 
 
             // Récupération de du total de la commande
@@ -351,6 +374,8 @@
 
 
 
+        } else {
+            echo "<p>Vous n'avez pas de panier</p>";
         }
 
 

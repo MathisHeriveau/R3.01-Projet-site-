@@ -1,5 +1,5 @@
 <?php
- session_start();
+session_start();
  $erreur = "";
 
  if(isset($_GET['connexion'])){
@@ -31,7 +31,9 @@
             $erreur = "Login ou mot de passe incorrect";
         }
     }
-}
+}else {
+     session_destroy();
+ }
 ?>
 <html>
 <head>
