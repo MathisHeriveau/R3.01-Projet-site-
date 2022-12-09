@@ -13,21 +13,27 @@
         }");
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
-            'Authorization: Bearer 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'
+            'Authorization: Bearer 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'
 
         ));
+        try {
+            $result = curl_exec($ch);
+            if (curl_errno($ch)) {
+                echo 'Error:' . curl_error($ch);
+            }
+            curl_close($ch);
+            // Récupération de l'URL de l'image
+            $tab = json_decode($result, true);
+            $url = $tab['data'][0]['url'];
 
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
+            // Affichage de l'imageg
+            echo "<img src='$url' alt='image générée'>";
+
         }
-        curl_close($ch);
-        // Récupération de l'URL de l'image
-        $tab = json_decode($result, true);
-        $url = $tab['data'][0]['url'];
+        catch (Exception $e) {
+            echo 'Exception reçue : ',  $e->getMessage(), "\n";
+        }
 
-        // Affichage de l'image
-        echo "<img src='$url' alt='image générée'>";
     }
 
 
