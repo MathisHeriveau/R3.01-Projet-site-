@@ -24,9 +24,26 @@ include 'BD/BD.php';
 
             <form enctype="multipart/form-data" action="mesCD.php" method="post">
 
-                <label>Image : </label>
+                <label>Importer une image : </label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="250000" />
                 <input type="file" name="fic" size=50 />
+                <label>Ou généré une image : </label>
+                <button type="button" onclick="generate()">Générer une image</button>
+                <script>
+                    function generate(){
+                        if (!document.getElementById('description').value == ""){
+                            window.location.href='mesCD.php?description='+document.getElementById('description').value;
+                        }else {
+                            alert("Veuillez remplir la description");
+                        }
+                    }
+                </script>
+                <?php
+                if (isset($_GET['description'])){
+                    echo "<label>Image obtenue : </label>";
+                }
+                include 'dall-e.php';
+                ?>
                 <label>Titre : </label>
                 <input type="text" name="titre" />
                 <label>Artiste : </label>
@@ -47,7 +64,7 @@ include 'BD/BD.php';
                     ?>
                 </select>
                 <label>Description : </label>
-                <textarea name="description" rows="1" cols="1"></textarea>
+                <textarea name="description" id="description" rows="1" cols="1"></textarea>
                 <label>Prix : </label>
                 <input type="number" name="prix" />
                 <label>Quantité : </label>
@@ -55,9 +72,6 @@ include 'BD/BD.php';
 
                 <?php
                 function transfert(){
-
-                    // 1 - Vérification que le fichier est bien sur le serveur ;
-                    // 2 - Vérification que l'image ne dépasse pas la taille maximum fixée ;
 
                     $ret        = false;
                     $img_blob   = '';

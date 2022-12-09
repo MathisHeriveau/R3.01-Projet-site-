@@ -35,7 +35,6 @@ main{
       form{
         display:grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
         grid-gap: 10px;
         width: 70%;
         height: 100%;
@@ -44,6 +43,15 @@ main{
         label{
           font-size: 1.2em;
           font-weight: bold;
+
+        }
+
+        img {
+          width: 100px;
+          height: 100px;
+          margin: 5%;
+          margin-top: 0;
+
 
         }
         input{
