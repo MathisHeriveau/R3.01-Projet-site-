@@ -53,7 +53,8 @@ if (isset($_GET['ModifierPhoto'])){
                             
                             echo '<img src="../Images/Avatar.png" alt="profil">';
                         }else{
-                            echo "<img src='afficheImage.php?login=1'> ";
+                            $id = $_SESSION['id'];
+                            echo "<img src=\"afficheImage.php?login=" . $id . "\">";
                         }
                     ?>
                 </div>

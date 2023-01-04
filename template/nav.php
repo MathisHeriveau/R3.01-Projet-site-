@@ -24,6 +24,14 @@
 
     // Connexion à la base de données
     include '../PhP/BD/BD.php';
+    $req = $db->prepare("Select image from users where id = :id");
+    $req->execute(array(
+        'id' => $_SESSION['id']
+    ));
+    $req->execute();
+    $row = $req->fetch();
+
+    $image = $row['image'];
 
     echo "<section class='profil'>";
     if($connecte){
@@ -39,7 +47,16 @@
 
         echo "</div>";
 
-        echo "<a id='imageProfil' href='profil.php'><img src='../Images/Avatar.png' alt='profil' class='profil' id='Avatar'></a>";
+        echo "<a id='imageProfil' href='profil.php'>";
+        if($image == null){
+                            
+            echo '<img src="../Images/Avatar.png" alt="profil">';
+        }else{
+            
+            $id = $_SESSION['id'];
+            echo "<img src=\"afficheImage.php?login=" . $id . "\">";
+        }
+        echo "</a>";
 
         echo "<a href='../PhP/connexion/deconnexion.php'>Déconnexion</a>";
     }
