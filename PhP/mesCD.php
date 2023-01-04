@@ -27,7 +27,7 @@ include 'BD/BD.php';
                 <label>Importer une image : </label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="250000" />
                 <input type="file" name="fic" size=50 />
-                <label>Ou généré une image : </label>
+                <label>Ou générer une image : </label>
                 <button type="button" onclick="generate()">Générer une image</button>
                 <script>
                     function generate(){

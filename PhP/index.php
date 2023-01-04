@@ -54,7 +54,14 @@ if (isset($_GET['retour'])) {
                             'genre' => strval($_GET['genre'])
                         ));}
 
-                }else{
+                }
+                elseif(isset($_GET['titre'])){
+                    $req = $db->prepare("SELECT * FROM CD where titre like :titre");
+                    $req->execute(array(
+                        'titre' => '%'.$_GET['titre'].'%'
+                    ));
+                }
+                else{
                     $req = $db->prepare("SELECT * FROM CD");
                 }
                 $req->execute();

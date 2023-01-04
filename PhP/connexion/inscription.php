@@ -24,13 +24,6 @@
                     <h2>Inscription</h2>
                     <form>
                         <div class="form-group">
-                            <input type="file" class="form-control" name="avatar" id="avatar" placeholder="avatar" alt="Avatar">
-                        </div>
-                        <script>
-                            function upload(){
-                            }
-                        </script>
-                        <div class="form-group">
                             <input type="text" class="form-control" name="login" id="login" placeholder="Login">
                         </div>
                         <div class="form-group">

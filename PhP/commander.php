@@ -29,7 +29,7 @@
     <link rel="stylesheet/less" type="text/css" href="../SCSS/nav.scss"/>
     <link rel="stylesheet/less" type="text/css" href="../SCSS/pallette.scss"/>
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
-    <title>Accueil</title>
+    <title>Commander</title>
 </head>
 
 <body>
@@ -385,15 +385,6 @@
 
 </body>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function(event) {
-        var scrollpos = localStorage.getItem('scrollpos');
-        if (scrollpos) window.scrollTo(0, scrollpos);
-    });
 
-    window.onbeforeunload = function(e) {
-        localStorage.setItem('scrollpos', window.scrollY);
-    };
-</script>
 
 </html>

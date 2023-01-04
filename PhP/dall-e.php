@@ -13,7 +13,7 @@
         }");
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
-            'Authorization: Bearer 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'
+            'Authorization: Bearer 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'
 
         ));
         try {
