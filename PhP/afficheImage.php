@@ -3,16 +3,16 @@
     include 'BD/BD.php';
 
     // Récupération de l'id de l'image
-    $id = $_GET['id'];
 
     // Récupération de l'image
-    if(isset($_GET['photoProfil'])){
+    if(isset($_GET['login'])){
         $req = $db->prepare("SELECT image FROM users WHERE id = :id");
+        $req->execute(array('id' => $_GET['login']));
     }else{
+        $id = $_GET['id'];
         $req = $db->prepare("SELECT image FROM CD WHERE id = :id");
-
+        $req->execute(array('id' => $id));
     }
-    $req->execute(array('id' => $id));
     $row = $req->fetch();
 
     // Affichage de l'image

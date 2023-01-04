@@ -21,6 +21,12 @@ $password = $row['password'];
 $email = $row['email'];
 $image = $row['image'];
 
+if (isset($_GET['ModifierPhoto'])){
+    if (transfert()){
+        echo "Transfert réussi";
+    }
+}
+
 ?>
 
 
@@ -44,9 +50,10 @@ $image = $row['image'];
                 <div class="profil__header__image">
                     <?php
                         if($image == null){
+                            
                             echo '<img src="../Images/Avatar.png" alt="profil">';
                         }else{
-                            echo $image;
+                            echo "<img src='afficheImage.php?login=1'> ";
                         }
                     ?>
                 </div>
@@ -62,7 +69,7 @@ $image = $row['image'];
                 </div>
             </div>
 
-            <form enctype="multipart/form-data" method="post">
+            <form enctype="multipart/form-data" action="profil.php?ModifierPhoto=" method="post">
                 <label>Importer une image : </label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="250000" />
                 <input type="file" name="fic" size=50 />
@@ -103,10 +110,23 @@ $image = $row['image'];
                 include 'BD/BD.php';
 
                 // 4 - Lecture du contenu du fichier dans une variable ;
-                $fp = fopen($_FILES['fic']['tmp_name'], 'r');
-                $img_blob = fread($fp, $img_taille);
-                $img_blob = addslashes($img_blob);
-                fclose($fp);
+                $image_info = getimagesize($_FILES['fic']['tmp_name']);
+                $image_width = $image_info[0];
+                $image_height = $image_info[1];
+
+                $image = imagecreatefromstring(file_get_contents($_FILES['fic']['tmp_name']));
+                $new_width = $image_width / 2;
+                $new_height = $image_height / 2;
+                $scaled_image = imagescale($image, $new_width, $new_height);
+
+                // Enregistrement de l'image réduite dans un fichier temporaire
+                imagejpeg($scaled_image, 'image.jpg');
+
+                // Récupération du contenu du fichier temporaire et ajout à la base de données
+                $img_blob = file_get_contents('image.jpg');
+
+                // Suppression du fichier temporaire
+                unlink('image.jpg');
 
 
                 // 5 - Préparation de la requête d'insertion (SQL) ;
@@ -125,13 +145,6 @@ $image = $row['image'];
             }
             ?>
 
-            <?php
-            if (isset($_GET['ModifierPhoto'])){
-                if (transfert()){
-                    echo "Transfert réussi";
-                }
-            }
-            ?>
         </div>
     </main>
 
