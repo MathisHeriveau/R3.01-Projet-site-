@@ -7,11 +7,11 @@
  *     => J'utilise un fichier .sqlite 
  * - Sur le serveur
  *      => J'utilise un fichier .ini pour stocker les informations de connexion
- ********************************
+ ********************************/
 
 
-    // Localhost
-    /*
+// Localhost
+/*
     $path = dirname(__DIR__, 2) . "/BD";
     $db = new PDO('sqlite:' . $path);
  */
