@@ -1,4 +1,6 @@
 <?php session_start();
+
+
 // Suppression des variables de session si on revient sur la page
 if (isset($_GET['retour'])) {
     unset($_SESSION['nom']);
@@ -175,12 +177,9 @@ if (isset($_GET['retour'])) {
                 ?>
 
             </section>
-            <?php include("../template/contact.php"); ?>
 
         </article>
 
     </main>
 </body>
-
-
 </html>

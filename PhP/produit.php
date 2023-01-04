@@ -48,7 +48,6 @@
             ?>
 
         </section>
-        <?php include("../template/contact.php"); ?>
 
     </main>
 

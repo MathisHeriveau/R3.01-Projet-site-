@@ -1,9 +1,19 @@
 <?php
 
-    // Path: Php\TD8&9\PhP\BD\BD.php
-    // Get the general path to the database file
+    // Localhost
     $path = dirname(__DIR__, 2) . "/BD";
-
     $db = new PDO('sqlite:' . $path);
-    //$db = new PDO("mysql:host=lakartxela;dbname=mheriveau_bd", "mheriveau_bd", "mheriveau_bd");
+
+
+    // Serveur
+    /*
+    $config = parse_ini_file('BD.ini', true);
+    $HOST = $config['HOST']['HOST'];
+    $USER = $config['LOGIN']['USER'];
+    $PASSWORD = $config['LOGIN']['PASSWORD'];
+    $DATABASE = $config['DATABASE']['DATABASE'];
+    $db = new PDO('mysql:host=' . $HOST . ';dbname=' . $DATABASE, $USER, $PASSWORD);
+    */
+
+
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
