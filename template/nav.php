@@ -24,14 +24,19 @@
 
     // Connexion à la base de données
     include '../PhP/BD/BD.php';
-    $req = $db->prepare("Select image from users where id = :id");
-    $req->execute(array(
-        'id' => $_SESSION['id']
-    ));
-    $req->execute();
-    $row = $req->fetch();
+    if(isset($_SESSION['id'])){
 
-    $image = $row['image'];
+        $req = $db->prepare("Select image from users where id = :id");
+        $req->execute(array(
+            'id' => $_SESSION['id']
+        ));
+        $req->execute();
+        $row = $req->fetch();
+
+        $image = $row['image'];
+    }else{
+        $image= null;
+    }
 
     echo "<section class='profil'>";
     if($connecte){
