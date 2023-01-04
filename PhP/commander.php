@@ -217,6 +217,8 @@ if (count($result) == 0) {
                     echo "<label for='cryptogramme'>Cryptogramme</label>";
                     echo "<p>" . $_GET['cryptogramme'] . "</p>";
                     echo "<input type='submit' name ='payer' value='Payer' disabled>";
+                    echo "</form>";
+                    echo "</div>";
                 } else {
                     echo "<input type='text' name='numeroCarte' id='numeroCarte' required maxlength='16' pattern='[0-9]{16}'>";
                     echo "<label for='dateExpiration'>Date d'expiration</label>";
@@ -224,14 +226,15 @@ if (count($result) == 0) {
                     echo "<label for='cryptogramme'>Cryptogramme</label>";
                     echo "<input type='text' name='cryptogramme' id='cryptogramme' required maxlength='3' pattern='[0-9]{3}'>";
                 
-                    echo "</div>";
 
                     // Si les données sont pas valides, on affiche les erreurs
                     echo "<p class='erreur'>Le numéro de carte doit avoir le premier et le dernier chiffre identique</p>";
                     echo "<p class='erreur'>La date doit être supérieure à la date actuelle + 3 mois</p>";
                     echo "<input type='submit' name ='payer' value='Payer'>";
+                    echo "</form>";
+                    echo "</div>";
                 }
-                echo "</form>";
+
 
                 // On enregistre les données dans une session
                 if (isset($_GET['submit'])) {
@@ -401,8 +404,6 @@ if (count($result) == 0) {
             $message .= "L'équipe de CDVente";
             $headers = "From: CDVente <cdVente@iutbayonne.univ-pau.fr>";
             mail($to, $subject, $message, $headers);
-        } else {
-            echo "<p>Vous n'avez pas de panier</p>";
         }
 
 
