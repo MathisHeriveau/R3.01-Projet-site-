@@ -124,19 +124,41 @@ include 'BD/BD.php';
                     else{
                         // 4 - Lecture du contenu du fichier dans une variable ;
                         if (isset($_SESSION['url'])){
-                            // Téléchargement de l'image depuis l'URL
-                            $imageData = file_get_contents($_SESSION['url']);
-                            // Téléchargement du contenu de l'image dans un fichier
-                            file_put_contents('image.jpg', $imageData);
-                            // Récupérer le contenu du fichier
-                            $img_blob = file_get_contents('image.jpg');
-                            // Supprimer le fichier
-                            unlink('image.jpg');
+
+                            // Récupération des dimensions de l'image
+                            $image_info = getimagesize($_SESSION['url']);
+                            $image_width = $image_info[0];
+                            $image_height = $image_info[1];
+
+                            // Création d'une image GD à partir du contenu de l'image
+                            $image = imagecreatefromstring(file_get_contents($_SESSION['url']));
+
+
                             unset($_SESSION['url']);
                             unset($_SESSION['description']);
                         }else{
-                            $img_blob = file_get_contents($_FILES['fic']['tmp_name']);
+
+                            $image_info = getimagesize($_FILES['fic']['tmp_name']);
+                            $image_width = $image_info[0];
+                            $image_height = $image_info[1];
+
+                            $image = imagecreatefromstring(file_get_contents($_FILES['fic']['tmp_name']));
                         }
+
+                        
+                        // Réduction de la taille de l'image
+                        $new_width = $image_width / 2;
+                        $new_height = $image_height / 2;
+                        $scaled_image = imagescale($image, $new_width, $new_height);
+
+                        // Enregistrement de l'image réduite dans un fichier temporaire
+                        imagejpeg($scaled_image, 'image.jpg');
+
+                        // Récupération du contenu du fichier temporaire et ajout à la base de données
+                        $img_blob = file_get_contents('image.jpg');
+
+                        // Suppression du fichier temporaire
+                        unlink('image.jpg');
 
                         // 5 - Préparation de la requête d'insertion ;
                         $req = $db->prepare("INSERT INTO CD (genre, titre, auteur, prix, image, description, quantite, idUser) VALUES (:genre, :titre, :artiste, :prix, :image, :description, :quantite, :idUser)");
