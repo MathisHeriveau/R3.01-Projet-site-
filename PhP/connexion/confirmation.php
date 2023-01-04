@@ -17,9 +17,13 @@
 
 session_start();
 
+// Si on a cliqué sur le bouton "inscription"
 if (isset($_GET['inscription'])) {
+    // On récupère les données du formulaire
     $code = $_GET['code'];
+    // On vérifie que le code est le bon
     if ($code == $_SESSION['code']) {
+        // On inscrit l'utilisateur
         include '../BD/BD.php';
         $login = $_SESSION['login'];
         $password = $_SESSION['password'];
@@ -30,8 +34,6 @@ if (isset($_GET['inscription'])) {
             'password' => $password,
             'email' => $email
         ));
-
-
         // Suppression des variables de session et de la session
         $_SESSION = array();
         session_destroy();
@@ -54,6 +56,7 @@ if (isset($_GET['inscription'])) {
 </head>
 
 <body>
+    <!-- Formulaire d'inscription qui est sur la meme base que le formulaire de connexion -->
     <div class="container">
         <div class="connexion">
             <div class="info-connexion">
@@ -62,7 +65,9 @@ if (isset($_GET['inscription'])) {
                     <div class="form-group">
                         <input type="text" class="form-control" name="code" id="code" placeholder="Code">
                     </div>
-                    <?php if (isset($_GET['inscription']) && $code != $_SESSION['code']) { ?>
+                    <?php
+                    // Si le code est incorrect
+                    if (isset($_GET['inscription']) && $code != $_SESSION['code']) { ?>
                         <p class="erreur">Code incorrect</p>
                     <?php } ?>
                     <button type="submit" class="btn btn-primary" name="inscription">Confirmer l'inscription</button>

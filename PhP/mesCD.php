@@ -40,8 +40,10 @@ include 'BD/BD.php';
                 <label>Importer une image : </label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="250000" />
                 <input type="file" name="fic" size=50 />
+
                 <label>Ou générer une image : </label>
                 <button type="button" onclick="generate()">Générer une image</button>
+                <!-- Script pour générer une image -->
                 <script>
                     function generate() {
                         if (!document.getElementById('description').value == "") {
@@ -52,20 +54,28 @@ include 'BD/BD.php';
                     }
                 </script>
                 <?php
+
+                // Si on a généré une image, on l'affiche
+
                 if (isset($_GET['description'])) {
                     echo "<label>Image obtenue : </label>";
                 }
+                // On inclut le fichier qui génère l'image
                 include 'dall-e.php';
                 ?>
+
                 <label>Titre : </label>
                 <input type="text" name="titre" />
+
+
                 <label>Artiste : </label>
                 <input type="text" name="artiste" />
+
+
                 <label>Genre : </label>
                 <select name="genre">
+                    <!-- On récupère les genres dans la base de données -->
                     <?php
-
-
                     $requete = "SELECT * FROM genre";
                     $resultat = $db->query($requete);
                     $genres = $resultat->fetchAll();
@@ -75,16 +85,35 @@ include 'BD/BD.php';
                     }
                     ?>
                 </select>
+
+
                 <label>Description : </label>
                 <textarea name="description" id="description" rows="1" cols="1"></textarea>
+
+
                 <label>Prix : </label>
                 <input type="number" name="prix" />
+
+
                 <label>Quantité : </label>
                 <input type="number" name="quantite" />
 
                 <?php
+                // Traitement de l'ajout d'un CD
                 function transfert()
                 {
+                    /*******************
+                     * Cette fonction permet de transférer l'image dans la base de données
+                     * 
+                     * Elle se déroule de la manière suivante :
+                     * 1 - On vérifie si l'utilisateur a généré une image ou en a importé une
+                     * 2 - On vérifie que l'image n'est pas trop grosse
+                     * 3 - On se connecte à la base de données
+                     * 4 - Lecture du contenu du fichier dans une variable 
+                     * 5 - On insère le CD dans la base de données
+                     * 6 - On execute la requête
+                     * 7 - On ferme la connexion
+                     *******************/
 
                     $ret        = false;
                     $img_blob   = '';
@@ -93,7 +122,7 @@ include 'BD/BD.php';
                     $img_nom    = '';
                     $taille_max = 250000;
 
-                    // On vérifie si l'utilisateur a généré une image ou en a importé une
+                    // 1 - On vérifie si l'utilisateur a généré une image ou en a importé une
                     if (isset($_SESSION['url'])) {
                         $ret = true;
                     } else {
@@ -154,13 +183,15 @@ include 'BD/BD.php';
                             $image_width = $image_info[0];
                             $image_height = $image_info[1];
 
+                            // Création d'une image GD à partir du contenu de l'image
                             $image = imagecreatefromstring(file_get_contents($_FILES['fic']['tmp_name']));
                         }
 
 
-                        // Réduction de la taille de l'image
+                        // Réduction de la taille de l'image à 50%
                         $new_width = $image_width / 2;
                         $new_height = $image_height / 2;
+                        // Création d'une nouvelle image vide
                         $scaled_image = imagescale($image, $new_width, $new_height);
 
                         // Enregistrement de l'image réduite dans un fichier temporaire
@@ -195,6 +226,7 @@ include 'BD/BD.php';
                 ?>
 
                 <?php
+                // Si le formulaire a été envoyé
                 if (isset($_POST['titre']) && isset($_POST['artiste']) && isset($_POST['prix']) && isset($_FILES['fic']) && isset($_POST['description']) && isset($_POST['quantite'])) {
                     transfert();
                 }
@@ -208,18 +240,21 @@ include 'BD/BD.php';
         <section class="filtre">
             <h2>Filtre</h2>
             <form>
+                <!-- POUR CHAQUE LABEL, ON VERIFIER SI LE GET EST DEFINI, SI OUI, ON MET LA VALEUR DANS LA VALUE -->
                 <label for="auteur">Auteur:</label>
                 <input type="text" name="titre" id="titre" <?php if (isset($_GET['titre'])) {
                                                                 echo "value='" . $_GET['titre'] . "'";
                                                             } ?>>
+
+
                 <label for="genre">Genre :</label>
                 <select name="genre" id="genre">
                     <?php
-
-
+                    // On récupère les genres dans la base de données
                     $req = $db->prepare("SELECT * FROM genre");
                     $req->execute();
                     echo "<option value='Tous'>Tous</option>";
+                    // On affiche les genres dans la liste déroulante
                     while ($row = $req->fetch()) {
                         if (isset($_GET['genre'])) {
                             if ($_GET['genre'] == $row['genre_name']) {
@@ -235,6 +270,8 @@ include 'BD/BD.php';
                     ?>
 
                 </select>
+
+                <!-- Systeme de filtre deja décrit dans le fichier index.php -->
                 <label for="prix">Prix:</label>
                 <div class="range">
                     <div class="range-slider">
@@ -307,7 +344,6 @@ include 'BD/BD.php';
                             }
                         });
                     });
-                    // Lorsqu'on charge la page, on met à jour la barre de sélection
                     let minRange = parseInt(rangeInput[0].value);
                     let maxRange = parseInt(rangeInput[1].value);
                     range.style.left = (minRange / rangeInput[0].max) * 100 + "%";
@@ -324,7 +360,7 @@ include 'BD/BD.php';
         </section>
 
 
-        <!-- Liste des CD -->
+        <!-- Systeme de de liste de CD deja décrit dans le fichier index.php -->
         <article class="shop-grid">
             <?php
             include 'BD/BD.php';

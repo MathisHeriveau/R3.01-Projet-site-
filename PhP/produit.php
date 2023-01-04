@@ -12,6 +12,7 @@
  * Il est possible de l'acheter (non implémenté)
  ********************************/
 
+ // On récupère l'id du produit
 if (!isset($_GET['id'])) {
     header("Location: ../index.php");
 }
@@ -33,6 +34,7 @@ session_start();
 <body>
     <?php include("nav.php"); ?>
     <main>
+        <!-- Affichage du produit -->
         <section class="produit">
             <?php
             include 'BD/BD.php';

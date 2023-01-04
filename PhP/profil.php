@@ -37,7 +37,9 @@ $password = $row['password'];
 $email = $row['email'];
 $image = $row['image'];
 
+// Si on a cliqué sur le bouton "Modifier"
 if (isset($_GET['ModifierPhoto'])) {
+    // On met à jour l'image de l'utilisateur
     if (transfert()) {
         echo "Transfert réussi";
     }
@@ -61,6 +63,7 @@ if (isset($_GET['ModifierPhoto'])) {
 <body>
     <?php include("nav.php"); ?>
     <main>
+        <!-- Affichage du profil -->
         <div class="profil">
             <h1>Profil</h1>
             <div class="profil__header">
@@ -85,6 +88,8 @@ if (isset($_GET['ModifierPhoto'])) {
                 </div>
             </div>
 
+            <!-- Formulaire de modification -->
+
             <form enctype="multipart/form-data" action="profil.php?ModifierPhoto=" method="post">
                 <label>Importer une image : </label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="250000" />
@@ -98,6 +103,8 @@ if (isset($_GET['ModifierPhoto'])) {
 
             </form>
             <?php
+
+            // Fonction qui permet de transférer l'image dans la base de données déja décrite dans le fichier "mesCD.php"
             function transfert()
             {
                 // creation d'une alerte

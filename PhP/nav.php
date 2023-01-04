@@ -15,6 +15,8 @@
  * Il est inclus dans toutes les pages
  ********************************/
 
+
+
 // On redirige vers la page d'accueil
 include "../PhP/connexion/estConnecte.php";
 if (estConnecte()) {
@@ -58,6 +60,8 @@ if (isset($_SESSION['id'])) {
 }
 
 echo "<section class='profil'>";
+
+// Si l'utilisateur est connecté, on affiche son panier et son profil
 if ($connecte) {
     echo "<div class='monPanier'>";
     echo "<img src='../Images/image-removebg-preview%20(47).png' alt='panier' class='panier' onclick='window.location.href=\"panier.php\"'/>";
@@ -72,10 +76,14 @@ if ($connecte) {
     echo "</div>";
 
     echo "<a id='imageProfil' href='profil.php'>";
+
+    // Si l'utilisateur n'a pas d'image de profil, on affiche l'image par défaut
     if ($image == null) {
 
         echo '<img src="../Images/Avatar.png" alt="profil">';
-    } else {
+    } 
+    // Sinon, on affiche l'image de profil de l'utilisateur
+    else {
 
         $id = $_SESSION['id'];
         echo "<img src=\"afficheImage.php?login=" . $id . "\">";

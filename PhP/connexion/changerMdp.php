@@ -16,32 +16,43 @@
 
 session_start();
 
-$errer = "";
+$errer = ""; // Variable pour afficher les erreurs
 
 if (isset($_POST['email'])) {
     $_SESSION['email'] = $_POST['email'];
 }
 
+// Si on a cliqué sur le bouton "changer mot de passe"
 if (isset($_GET['changerMdp'])) {
+
     include '../BD/BD.php';
+
+    // On récupère les données du formulaire
     $email = $_SESSION['email'];
     $token = $_GET['token'];
     $password = $_GET['password'];
     $password2 = $_GET['password2'];
 
+    // On vérifie que le token est le bon et que les mots de passe correspondent
     if (isset($_GET['password']) && isset($_GET['password2']) && ($_GET['password'] == $_GET['password2'] && $token == $_SESSION['token'])) {
+        // On vérifie que les mots de passe correspondent
         if ($password == $password2) {
+            // On hash le mot de passe
             $password = hash('sha256', $_GET['password']);
+            // On met à jour le mot de passe
             $req = $db->prepare('UPDATE users SET password = :password WHERE email = :email');
             $req->execute(array(
                 'password' => $password,
                 'email' => $email
             ));
+            // On redirige vers la page de connexion
             header("Location: connexion.php");
         } else {
+            // On affiche un message d'erreur
             $errer = "Les mots de passe ne correspondent pas";
         }
     } else {
+        // On affiche un message d'erreur
         $errer = "Les mots de passe ne correspondent pas ou le token est incorrect";
     }
 }
@@ -59,6 +70,7 @@ if (isset($_GET['changerMdp'])) {
 </head>
 
 <body>
+    <!-- Formulaire de connexion -->
     <div class="container">
         <div class="connexion">
             <div class="info-connexion">

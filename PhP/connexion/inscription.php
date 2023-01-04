@@ -15,8 +15,8 @@
  ********************************/
 
 session_start();
-// Montrer toutes les variables de session
 
+// Si on a cliqué sur le bouton "inscription"
 if (isset($_GET['inscription'])) {
     header('Location: confirmation.php');
 }
@@ -33,6 +33,7 @@ if (isset($_GET['inscription'])) {
 </head>
 
 <body>
+    <!-- Formulaire d'inscription qui est sur la meme base que le formulaire de connexion -->
     <div class="container">
         <div class="connexion">
             <div class="info-connexion">
@@ -58,6 +59,7 @@ if (isset($_GET['inscription'])) {
                         <a href="connexion.php">Je possede déja un compte ?</a>
                     </div>
                     <?php
+                    // Si on a cliqué sur le bouton "inscription"
                     if (isset($_GET['inscription'])) {
 
                         // On récupère les données du formulaire
@@ -72,13 +74,17 @@ if (isset($_GET['inscription'])) {
                             if ($password == $confPassword) {
                                 // On vérifie que l'email est valide
                                 if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                    // On vérifie que le login n'est pas déjà utilisé
                                     include '../BD/BD.php';
                                     $query = $db->prepare("SELECT * FROM users WHERE login = :login and email = :email");
                                     $query->execute(['login' => $login, 'email' => $email]);
                                     $result = $query->fetch();
+                                    // Si le login est déjà utilisé
                                     if ($result) {
                                         echo "L'utilisateur existe déjà";
-                                    } else {
+                                    } 
+                                    // Sinon on envoie un mail de confirmation
+                                    else {
                                         // Envoie d'un mail de confirmation
                                         $to = $email;
                                         $subject = "Confirmation d'inscription";
@@ -94,18 +100,25 @@ if (isset($_GET['inscription'])) {
                                             echo "Une erreur est survenue lors de l'envoie du mail.";
                                         }
 
+                                        // On stocke les données dans des variables de session
                                         $_SESSION['code'] = $code;
                                         $_SESSION['login'] = $login;
                                         $_SESSION['password'] = hash('sha256', $password);
                                         $_SESSION['email'] = $email;
                                     }
-                                } else {
+                                } 
+                                // Sinon on affiche un message d'erreur
+                                else {
                                     echo "L'email n'est pas valide";
                                 }
-                            } else {
+                            } 
+                            // Sinon on affiche un message d'erreur
+                            else {
                                 echo "Les mots de passe ne sont pas identiques";
                             }
-                        } else {
+                        } 
+                        // Sinon on affiche un message d'erreur
+                        else {
                             echo "Veuillez remplir tous les champs";
                         }
                     }

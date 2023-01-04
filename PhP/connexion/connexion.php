@@ -13,13 +13,15 @@
 
 
 session_start();
-$erreur = "";
+$erreur = ""; // Variable pour afficher les erreurs
 
+// Si on a cliqué sur le bouton "connexion"
 if (isset($_GET['connexion'])) {
     // Si tous les champs sont remplis
     if (empty($_GET['login']) || empty($_GET['password'])) {
         $erreur = "Veuillez remplir tous les champs";
     } else {
+        // On vérifie que le login et le mot de passe sont corrects
         include '../BD/BD.php';
         $password = hash('sha256', $_GET['password']);
         $req = $db->prepare("SELECT * FROM users where login = :login and password = :password");
@@ -29,19 +31,25 @@ if (isset($_GET['connexion'])) {
         ));
         $resultat = $req->fetch();
 
+        // Si le login et le mot de passe sont corrects
         if ($resultat) {
+            // On démarre la session
             $_SESSION['id'] = $resultat['id'];
             $_SESSION['login'] = $_GET['login'];
+            // Si on a coché la case "se souvenir de moi"
             if (isset($_GET['souvenir'])) {
                 setcookie('login', $_GET['login'], time() + 365 * 24 * 3600, null, null, false, true);
             }
 
             header("Location: ../index.php");
-        } else {
+        } 
+        // Si le login ou le mot de passe est incorrect
+        else {
             $erreur = "Login ou mot de passe incorrect";
         }
     }
 } else {
+    //Si jamais... on détruit la session
     session_destroy();
 }
 ?>
@@ -56,6 +64,7 @@ if (isset($_GET['connexion'])) {
 </head>
 
 <body>
+    <!-- Formulaire de connexion -->
     <div class="container">
         <div class="connexion">
             <div class="info-connexion">
@@ -79,6 +88,7 @@ if (isset($_GET['connexion'])) {
                     </div>
 
                     <?php
+                    // On affiche les erreurs
                     if ($erreur != "") {
                         echo "<p class='erreur'>
                                 $erreur

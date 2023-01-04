@@ -13,7 +13,11 @@
  * - On redirige vers la page panier.php
  ********************************/
 session_start();
+
+// On récupère l'id de l'utilisateur, l'id du produit et la quantité
 if (isset($_SESSION['id']) && isset($_GET['idProduit']) && isset($_GET['quantite'])) {
+
+    // On stocke les données dans des variables
     $idProduit = $_GET['idProduit'];
     $idUser = $_SESSION['id'];
     $quantite = $_GET['quantite'];
@@ -27,6 +31,7 @@ if (isset($_SESSION['id']) && isset($_GET['idProduit']) && isset($_GET['quantite
         'idUser' => $idUser
     ));
     $resultat = $req->fetch();
+
     if ($resultat) {
         // Si l'utilisateur a déjà un panier, on vérifie si le produit est déjà dans le panier
         $req = $db->prepare("SELECT * FROM panier where idUser = :idUser and idCD = :idProduit");
@@ -35,6 +40,7 @@ if (isset($_SESSION['id']) && isset($_GET['idProduit']) && isset($_GET['quantite
             'idProduit' => $idProduit
         ));
         $resultat = $req->fetch();
+
         if ($resultat) {
             // Si le produit est déjà dans le panier, on met à jour la quantité
             $req = $db->prepare("UPDATE panier SET quantite = :quantite WHERE idUser = :idUser and idCD = :idProduit");
@@ -61,8 +67,13 @@ if (isset($_SESSION['id']) && isset($_GET['idProduit']) && isset($_GET['quantite
             'quantite' => $quantite
         ));
     }
+    // On ferme la connexion à la base de données
     $db = null;
+
+    // On redirige vers la page panier.php
     header("Location: ../panier.php");
+
 } elseif (!isset($_SESSION['id'])) {
+    // Si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
     header("Location: ../connexion/connexion.php");
 }

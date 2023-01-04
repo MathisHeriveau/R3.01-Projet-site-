@@ -16,20 +16,22 @@
 // Ouverture de la BD
 include 'BD/BD.php';
 
-// Récupération de l'id de l'image
-
 // Récupération de l'image
+// Si le paramètre login est présent, alors c'est une image de profil
 if (isset($_GET['login'])) {
     $req = $db->prepare("SELECT image FROM users WHERE id = :id");
     $req->execute(array('id' => $_GET['login']));
-} else {
+} 
+// Sinon, c'est une image de CD
+elseif(isset($_GET['id'])) {
     $id = $_GET['id'];
     $req = $db->prepare("SELECT image FROM CD WHERE id = :id");
     $req->execute(array('id' => $id));
 }
+
 $row = $req->fetch();
 
-// Affichage de l'image
+// Affichage de l'image en format JPEG
 header("Content-type: image/jpeg");
 echo $row['image'];
 

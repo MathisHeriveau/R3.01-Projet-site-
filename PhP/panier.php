@@ -11,6 +11,8 @@
  ********************************/
 
 session_start();
+
+// Si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
 if (!isset($_SESSION['id'])) {
     header('Location: connexion/connexion.php');
 }
@@ -36,6 +38,7 @@ if (!isset($_SESSION['id'])) {
     ?>
 
     <main>
+        <!-- Affichage du panier -->
         <section class="panier">
             <h2>Mon panier</h2>
             <div class="mesArticle">
@@ -53,8 +56,10 @@ if (!isset($_SESSION['id'])) {
 
                 // Si le panier est vide
                 if ($req->rowCount() == 0) {
-                    echo "<h1>Votre panier est vide</h1>";
-                } else {
+                    echo "<h1>Votre panier est vide :(</h1>";
+                } 
+                // Sinon on affiche les CD du panier
+                else {
                     while ($row = $req->fetch()) {
                         echo "<div class='unArticle'>";
                         $cd->execute(array(
@@ -79,6 +84,8 @@ if (!isset($_SESSION['id'])) {
 
 
                 ?> </div>
+
+            <!-- Affichage du prix total -->
             <div class="sous-total">
                 <h3>Sous-total</h3>
                 <?php
@@ -91,6 +98,7 @@ if (!isset($_SESSION['id'])) {
                 $cd = $db->prepare("SELECT * FROM CD where id = :id");
 
                 $total = 0;
+                // On calcule le prix total
                 while ($row = $req->fetch()) {
                     $cd->execute(array(
                         'id' => $row['idCD']
@@ -106,6 +114,7 @@ if (!isset($_SESSION['id'])) {
 
         </section>
 
+        <!-- Affichage du bouton pour passer la commande -->
         <section class="paiement">
             <h2>Total</h2>
             <div class="sous-total">

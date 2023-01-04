@@ -13,7 +13,8 @@ $id = $_GET['id'];
 
 include '../BD/BD.php';
 
-// Delete the CD
+// On supprime le CD
 $db->exec("DELETE FROM CD WHERE id = $id");
 
+// On redirige vers la page mesCD.php
 header("Location: ../mesCD.php");

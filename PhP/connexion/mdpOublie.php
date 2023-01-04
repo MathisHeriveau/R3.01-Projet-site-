@@ -14,17 +14,25 @@
  ********************************/
 
 
-include '../BD/BD.php';
 session_start();
-$errer = "";
+
+include '../BD/BD.php';
+
+$errer = ""; // Variable pour afficher les erreurs
+
+// Si on a cliqué sur le bouton "changer mot de passe"
 if (isset($_GET['mdpOublie'])) {
+    // On récupère les données du formulaire
     $email = $_GET['email'];
+    // On vérifie que le mail existe
     $req = $db->prepare('SELECT * FROM users WHERE email = :email');
     $req->execute(array(
         'email' => $email
     ));
     $resultat = $req->fetch();
+    // Si le mail existe
     if ($resultat) {
+        // On génère un token aléatoire
         $token = random_int(100000, 999999);
         $_SESSION['token'] = $token;
         $_SESSION['email'] = $email;
@@ -41,9 +49,11 @@ if (isset($_GET['mdpOublie'])) {
         } else {
             $errer = "Une erreur est survenue lors de l'envoie du mail.";
         }
-
+        // On redirige vers la page de changement de mot de passe
         header('Location: changerMdp.php?&email=' . $_GET['email']);
-    } else {
+    } 
+    // Sinon on affiche une erreur
+    else {
         $errer = "Aucun compte n'est associé à cette adresse mail.";
     }
 }
@@ -60,6 +70,7 @@ if (isset($_GET['mdpOublie'])) {
 </head>
 
 <body>
+    <!-- Formulaire de récupération de mot de passe sous la meme forme que la page de connexion -->
     <div class="container">
         <div class="connexion">
             <div class="info-connexion">
