@@ -1,4 +1,20 @@
 <?php
+
+/*******************************
+ * Ce fichier permet de modifier le profil de l'utilisateur
+ * 
+ * Il se déroule de la manière suivante:
+ * - On récupère les informations de l'utilisateur
+ * - On affiche les informations de l'utilisateur
+ * - On affiche le formulaire de modification
+ * 
+ * Si l'utilisateur clique sur le bouton "Modifier", alors:
+ * - On récupère les informations du formulaire
+ * - On remplace l'ancienne image par la nouvelle
+ * - On met à jour les informations de l'utilisateur
+ ********************************/
+
+
 session_start();
 // On redirige vers la page d'accueil
 if (!isset($_SESSION['id'])) {
@@ -21,8 +37,8 @@ $password = $row['password'];
 $email = $row['email'];
 $image = $row['image'];
 
-if (isset($_GET['ModifierPhoto'])){
-    if (transfert()){
+if (isset($_GET['ModifierPhoto'])) {
+    if (transfert()) {
         echo "Transfert réussi";
     }
 }
@@ -32,30 +48,31 @@ if (isset($_GET['ModifierPhoto'])){
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/nav.scss"/>
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/pallette.scss"/>
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/profil.scss"/>
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/nav.scss" />
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/pallette.scss" />
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/profil.scss" />
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
     <title>Profil</title>
 </head>
 
 <body>
-    <?php include("../template/nav.php"); ?>
+    <?php include("nav.php"); ?>
     <main>
         <div class="profil">
             <h1>Profil</h1>
             <div class="profil__header">
-                    <?php
-                        if($image == null){
-                            
-                            echo '<img src="../Images/Avatar.png" alt="profil">';
-                        }else{
-                            $id = $_SESSION['id'];
-                            echo "<img src=\"afficheImage.php?login=" . $id . "\">";
-                        }
-                    ?>
+                <?php
+                if ($image == null) {
+
+                    echo '<img src="../Images/Avatar.png" alt="profil">';
+                } else {
+                    $id = $_SESSION['id'];
+                    echo "<img src=\"afficheImage.php?login=" . $id . "\">";
+                }
+                ?>
             </div>
             <div class="profil__info">
                 <div class="profil__info__item">
@@ -72,16 +89,17 @@ if (isset($_GET['ModifierPhoto'])){
                 <label>Importer une image : </label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="250000" />
                 <input type="file" name="fic" size=50 />
-                <button type="submit" name="ModifierPhoto" >Modifier la photo de profil</button>
+                <button type="submit" name="ModifierPhoto">Modifier la photo de profil</button>
                 <div class="groupe_bouton">
-                    <a href="connexion/mdpOublie.php" >Changer le mot de passe</a>
-                    <a href="connexion/deconnexion.php" >Deconnexion</a>
-        
+                    <a href="connexion/mdpOublie.php">Changer le mot de passe</a>
+                    <a href="connexion/deconnexion.php">Deconnexion</a>
+
                 </div>
 
             </form>
             <?php
-            function transfert(){
+            function transfert()
+            {
                 // creation d'une alerte
                 $ret        = false;
                 $img_blob   = '';
@@ -94,8 +112,7 @@ if (isset($_GET['ModifierPhoto'])){
 
                 if (!$ret) {
                     return false;
-                }
-                else{
+                } else {
                     // Le fichier a bien été reçu
                     $img_taille = $_FILES['fic']['size'];
 
@@ -143,7 +160,6 @@ if (isset($_GET['ModifierPhoto'])){
 
                 // 7 - Fermeture de la connexion à la base de données ;
                 $db = null;
-
             }
             ?>
 
@@ -153,6 +169,5 @@ if (isset($_GET['ModifierPhoto'])){
 
 
 </body>
+
 </html>
-
-

@@ -1,195 +1,189 @@
 <?php
-    session_start();
-    // On redirige vers la page d'accueil
-    if (isset($_SESSION['id'])) {
-        $connecte = true;
-    } else {
-        $connecte = false;
-    }
 
-    // Si le panier est vide, on redirige vers la page d'accueil
-    include 'BD/BD.php';
+/*******************************
+ * Ce fichier permet de commander les CD et de simuler un paiement
+ * 
+ * Il se déroule de la manière suivante:
+ * - On récupère les informations de l'utilisateur dans un premier formulaire
+ * - On récupère les informations de la carte bancaire dans un second formulaire
+ * - On vérifie que les informations sont correctes
+ * - On affiche un récapitulatif de la commande
+ * - On supprime les CD du panier
+ * - On redirige vers la page d'accueil
+ ********************************/
 
-    $query = "SELECT * FROM panier where idUser = :id_client";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':id_client', $_SESSION['id']);
-    $stmt->execute();
-    $result = $stmt->fetchAll();
-    $vide = false;
-    if (count($result) == 0) {
-        $vide = true;
-        header('Location:index.php?retour=');
-    }
+session_start();
+
+// On redirige vers la page d'accueil
+if (isset($_SESSION['id'])) {
+    $connecte = true;
+} else {
+    $connecte = false;
+}
+
+// Si le panier est vide, on redirige vers la page d'accueil
+include 'BD/BD.php';
+
+$query = "SELECT * FROM panier where idUser = :id_client";
+$stmt = $db->prepare($query);
+$stmt->bindParam(':id_client', $_SESSION['id']);
+$stmt->execute();
+$result = $stmt->fetchAll();
+$vide = false;
+if (count($result) == 0) {
+    $vide = true;
+    header('Location:index.php?retour=');
+}
 
 ?>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/commander.scss"/>
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/nav.scss"/>
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/pallette.scss"/>
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/commander.scss" />
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/nav.scss" />
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/pallette.scss" />
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
     <title>Commander</title>
 </head>
 
 <body>
-    <?php include '../template/nav.php'; ?>
+    <?php include 'nav.php'; ?>
     <main>
         <form>
             <h2>Commander</h2>
             <div class="info">
                 <label for="nom">Nom</label>
-                <?php 
-                    if(isset($_GET['nom'])){
-                        echo "<p class='erreur'>".$_GET['nom']."</p>";
-                    }
-                    elseif(isset($_SESSION['nom'])){
-                        echo "<p class='erreur'>".$_SESSION['nom']."</p>";
-                    }
-                   else{
+                <?php
+                if (isset($_GET['nom'])) {
+                    echo "<p class='erreur'>" . $_GET['nom'] . "</p>";
+                } elseif (isset($_SESSION['nom'])) {
+                    echo "<p class='erreur'>" . $_SESSION['nom'] . "</p>";
+                } else {
                     echo "<input type='text' name='nom' id='nom' required>";
-                   }
+                }
                 ?>
                 <label for="prenom">Prénom</label>
-                <?php 
-                    if(isset($_GET['prenom'])){
-                        echo "<p class='erreur'>".$_GET['prenom']."</p>";
-                    }
-                    elseif(isset($_SESSION['prenom'])){
-                        echo "<p class='erreur'>".$_SESSION['prenom']."</p>";
-                    }
-                   else{
-                        echo "<input type='text' name='prenom' id='prenom' required>";
-                   }
+                <?php
+                if (isset($_GET['prenom'])) {
+                    echo "<p class='erreur'>" . $_GET['prenom'] . "</p>";
+                } elseif (isset($_SESSION['prenom'])) {
+                    echo "<p class='erreur'>" . $_SESSION['prenom'] . "</p>";
+                } else {
+                    echo "<input type='text' name='prenom' id='prenom' required>";
+                }
                 ?>
                 <label for="adresse">Adresse</label>
-                <?php 
-                    if(isset($_GET['adresse'])){
-                        echo "<p class='erreur'>".$_GET['adresse']."</p>";
-                    }
-                    elseif(isset($_SESSION['adresse'])){
-                        echo "<p class='erreur'>".$_SESSION['adresse']."</p>";
-                    }
-                   else{
-                        echo "<input type='text' name='adresse' id='adresse' required>";
-                   }
+                <?php
+                if (isset($_GET['adresse'])) {
+                    echo "<p class='erreur'>" . $_GET['adresse'] . "</p>";
+                } elseif (isset($_SESSION['adresse'])) {
+                    echo "<p class='erreur'>" . $_SESSION['adresse'] . "</p>";
+                } else {
+                    echo "<input type='text' name='adresse' id='adresse' required>";
+                }
                 ?>
                 <label for="ville">Ville</label>
-                <?php 
-                    if(isset($_GET['ville'])){
-                        echo "<p class='erreur'>".$_GET['ville']."</p>";
-                    }
-                    elseif(isset($_SESSION['ville'])){
-                        echo "<p class='erreur'>".$_SESSION['ville']."</p>";
-                    }
-                   else{
-                        echo "<input type='text' name='ville' id='ville' required>";
-                   }
+                <?php
+                if (isset($_GET['ville'])) {
+                    echo "<p class='erreur'>" . $_GET['ville'] . "</p>";
+                } elseif (isset($_SESSION['ville'])) {
+                    echo "<p class='erreur'>" . $_SESSION['ville'] . "</p>";
+                } else {
+                    echo "<input type='text' name='ville' id='ville' required>";
+                }
                 ?>
                 <label for="codePostal">Code postal</label>
-                <?php 
-                    if(isset($_GET['codePostal'])){
-                        echo "<p class='erreur'>".$_GET['codePostal']."</p>";
-                    }
-                    elseif(isset($_SESSION['codePostal'])){
-                        echo "<p class='erreur'>".$_SESSION['codePostal']."</p>";
-                    }
-                   else{
-                        echo "<input type='text' name='codePostal' id='codePostal' required>";
-                   }
+                <?php
+                if (isset($_GET['codePostal'])) {
+                    echo "<p class='erreur'>" . $_GET['codePostal'] . "</p>";
+                } elseif (isset($_SESSION['codePostal'])) {
+                    echo "<p class='erreur'>" . $_SESSION['codePostal'] . "</p>";
+                } else {
+                    echo "<input type='text' name='codePostal' id='codePostal' required>";
+                }
                 ?>
                 <label for="pays">Pays</label>
-                <?php 
-                    if(isset($_GET['pays'])){
-                        echo "<p class='erreur'>".$_GET['pays']."</p>";
-                    }
-                    elseif(isset($_SESSION['pays'])){
-                        echo "<p class='erreur'>".$_SESSION['pays']."</p>";
-                    }
-                   else{
-                        echo "<input type='text' name='pays' id='pays' required>";
-                   }
+                <?php
+                if (isset($_GET['pays'])) {
+                    echo "<p class='erreur'>" . $_GET['pays'] . "</p>";
+                } elseif (isset($_SESSION['pays'])) {
+                    echo "<p class='erreur'>" . $_SESSION['pays'] . "</p>";
+                } else {
+                    echo "<input type='text' name='pays' id='pays' required>";
+                }
                 ?>
                 <label for="email">Email</label>
-                <?php 
-                    include 'BD/BD.php';
-                    $req = $db->prepare("SELECT * FROM users where id = :id");
-                    $req->execute(array(
-                        'id' => $_SESSION['id']
-                    ));
-                    $result = $req->fetch();
-                    $email = $result['email'];
-                    echo "<p>".$email."</p>";
+                <?php
+                include 'BD/BD.php';
+                $req = $db->prepare("SELECT * FROM users where id = :id");
+                $req->execute(array(
+                    'id' => $_SESSION['id']
+                ));
+                $result = $req->fetch();
+                $email = $result['email'];
+                echo "<p>" . $email . "</p>";
                 ?>
                 <label for="telephone">Téléphone</label>
-                <?php 
-                    if(isset($_GET['telephone'])){
-                        echo "<p class='erreur'>".$_GET['telephone']."</p>";
-                    }
-                    elseif(isset($_SESSION['telephone'])){
-                        echo "<p class='erreur'>".$_SESSION['telephone']."</p>";
-                    }
-                   else{
-                        echo "<input type='text' name='telephone' id='telephone' required>";
-                   }
+                <?php
+                if (isset($_GET['telephone'])) {
+                    echo "<p class='erreur'>" . $_GET['telephone'] . "</p>";
+                } elseif (isset($_SESSION['telephone'])) {
+                    echo "<p class='erreur'>" . $_SESSION['telephone'] . "</p>";
+                } else {
+                    echo "<input type='text' name='telephone' id='telephone' required>";
+                }
                 ?>
             </div>
             <div class="paiement">
                 <h3>Paiement</h3>
                 <label for="carte">Carte bancaire</label>
-                <?php 
-                    if(isset($_GET['paiement'])){
-                        if($_GET['paiement'] == "carte"){
-                            echo "<input type='radio' name='paiement' id='carte' value='carte' checked required>";
-                        }
-                        else{
-                            echo "<input type='radio' name='paiement' id='carte' value='carte' required>";
-                        }
-                    }
-                    else{
+                <?php
+                if (isset($_GET['paiement'])) {
+                    if ($_GET['paiement'] == "carte") {
+                        echo "<input type='radio' name='paiement' id='carte' value='carte' checked required>";
+                    } else {
                         echo "<input type='radio' name='paiement' id='carte' value='carte' required>";
                     }
-                    ?>
+                } else {
+                    echo "<input type='radio' name='paiement' id='carte' value='carte' required>";
+                }
+                ?>
                 <label for="paypal">Paypal</label>
-                <?php 
-                    if(isset($_GET['paiement'])){
-                        if($_GET['paiement'] == "paypal"){
-                            echo "<input type='radio' name='paiement' id='paypal' value='paypal' checked required>";
-                        }
-                        else{
-                            echo "<input type='radio' name='paiement' id='paypal' value='paypal' required>";
-                        }
-                    }
-                    else{
+                <?php
+                if (isset($_GET['paiement'])) {
+                    if ($_GET['paiement'] == "paypal") {
+                        echo "<input type='radio' name='paiement' id='paypal' value='paypal' checked required>";
+                    } else {
                         echo "<input type='radio' name='paiement' id='paypal' value='paypal' required>";
                     }
-                    ?>
+                } else {
+                    echo "<input type='radio' name='paiement' id='paypal' value='paypal' required>";
+                }
+                ?>
             </div>
-            <?php 
-                if (isset($_GET['submit'])) {
-                    echo "<input type='submit' name='submit' value='Valider'>";
-                }
-                else{
-                    echo "<input type='submit' name='submit' value='Valider'>";
-                }
+            <?php
+            if (isset($_GET['submit'])) {
+                echo "<input type='submit' name='submit' value='Valider'>";
+            } else {
+                echo "<input type='submit' name='submit' value='Valider'>";
+            }
             ?>
-            </form>
+        </form>
         <?php
-        if (isset ($_GET['submit'])|| isset($_GET['numeroCarte'])) {
+        if (isset($_GET['submit']) || isset($_GET['numeroCarte'])) {
 
             echo "<form class='payer'>";
             echo "<h2>Paiement</h2>";
             echo "<div class='carte'>";
             echo "<label for='numeroCarte'>Numéro de carte</label>";
             if (paiementValide()) {
-                echo "<p>".$_GET['numeroCarte']."</p>";
+                echo "<p>" . $_GET['numeroCarte'] . "</p>";
                 echo "<label for='dateExpiration'>Date d'expiration</label>";
-                echo "<p>".$_GET['dateExpiration']."</p>";
+                echo "<p>" . $_GET['dateExpiration'] . "</p>";
                 echo "<label for='cryptogramme'>Cryptogramme</label>";
-                echo "<p>".$_GET['cryptogramme']."</p>";
-
-            }
-            else{
+                echo "<p>" . $_GET['cryptogramme'] . "</p>";
+            } else {
                 echo "<input type='text' name='numeroCarte' id='numeroCarte' required maxlength='16' pattern='[0-9]{16}'>";
                 echo "<label for='dateExpiration'>Date d'expiration</label>";
                 echo "<input type='month' name='dateExpiration' id='dateExpiration' required>";
@@ -204,7 +198,7 @@
             echo "<input type='submit' name ='payer' value='Payer'>";
             echo "</form>";
 
-            if(isset($_GET['submit'])){
+            if (isset($_GET['submit'])) {
                 // Récupération des données dans un session
                 $_SESSION['nom'] = $_GET['nom'];
                 $_SESSION['prenom'] = $_GET['prenom'];
@@ -215,29 +209,26 @@
                 $_SESSION['email'] = $email;
                 $_SESSION['telephone'] = $_GET['telephone'];
             }
-
         }
         ?>
 
         <?php
-            function paiementValide(){
-                if(isset($_GET['numeroCarte'])){
-                    if($_GET['numeroCarte'][0] == $_GET['numeroCarte'][15]){
-                        $dateLimite = date('Y-m', strtotime('+3 months'));
-                        if($_GET['dateExpiration'] > $dateLimite){
-                            return true;
-                        }
-                        else{
-                            // Erreur date d'expiration situé sous le titre paiement
-                            return false;
-                        }
-
-                    }
-                    else{
+        function paiementValide()
+        {
+            if (isset($_GET['numeroCarte'])) {
+                if ($_GET['numeroCarte'][0] == $_GET['numeroCarte'][15]) {
+                    $dateLimite = date('Y-m', strtotime('+3 months'));
+                    if ($_GET['dateExpiration'] > $dateLimite) {
+                        return true;
+                    } else {
+                        // Erreur date d'expiration situé sous le titre paiement
                         return false;
                     }
+                } else {
+                    return false;
                 }
             }
+        }
         ?>
 
         <?php
@@ -371,15 +362,12 @@
             $message .= "L'équipe de CDVente";
             $headers = "From: CDVente <cdVente@iutbayonne.univ-pau.fr>";
             mail($to, $subject, $message, $headers);
-
-
-
         } else {
             echo "<p>Vous n'avez pas de panier</p>";
         }
 
 
-    ?>
+        ?>
     </main>
 
 

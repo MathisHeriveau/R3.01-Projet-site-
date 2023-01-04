@@ -1,20 +1,33 @@
 <?php
+
+/*******************************
+ * Ce fichier permet de gérer les CD de l'utilisateur
+ * 
+ * On peut y faire les actions suivantes:
+ * - Ajouter un CD
+ *    => On peut importer une image ou générer une image
+ * - Supprimer un CD
+ * - Filtrer les CD
+ ********************************/
+
 session_start();
 
 include 'BD/BD.php';
 ?>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/mesCD.scss"/>
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/pallette.scss"/>
-    <link rel="stylesheet/less" type="text/css" href="../SCSS/nav.scss"/>
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/mesCD.scss" />
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/pallette.scss" />
+    <link rel="stylesheet/less" type="text/css" href="../SCSS/nav.scss" />
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
     <title>Mes CD</title>
 </head>
+
 <body>
     <?php
-        include '../template/nav.php';
+    include 'nav.php';
     ?>
 
     <main>
@@ -30,16 +43,16 @@ include 'BD/BD.php';
                 <label>Ou générer une image : </label>
                 <button type="button" onclick="generate()">Générer une image</button>
                 <script>
-                    function generate(){
-                        if (!document.getElementById('description').value == ""){
-                            window.location.href='mesCD.php?description='+document.getElementById('description').value;
-                        }else {
+                    function generate() {
+                        if (!document.getElementById('description').value == "") {
+                            window.location.href = 'mesCD.php?description=' + document.getElementById('description').value;
+                        } else {
                             alert("Veuillez remplir la description");
                         }
                     }
                 </script>
                 <?php
-                if (isset($_GET['description'])){
+                if (isset($_GET['description'])) {
                     echo "<label>Image obtenue : </label>";
                 }
                 include 'dall-e.php';
@@ -51,7 +64,7 @@ include 'BD/BD.php';
                 <label>Genre : </label>
                 <select name="genre">
                     <?php
-                    
+
 
                     $requete = "SELECT * FROM genre";
                     $resultat = $db->query($requete);
@@ -70,7 +83,8 @@ include 'BD/BD.php';
                 <input type="number" name="quantite" />
 
                 <?php
-                function transfert(){
+                function transfert()
+                {
 
                     $ret        = false;
                     $img_blob   = '';
@@ -80,22 +94,21 @@ include 'BD/BD.php';
                     $taille_max = 250000;
 
                     // On vérifie si l'utilisateur a généré une image ou en a importé une
-                    if (isset($_SESSION['url'])){
+                    if (isset($_SESSION['url'])) {
                         $ret = true;
-                    }else{
+                    } else {
                         $ret = is_uploaded_file($_FILES['fic']['tmp_name']);
                     }
 
                     if (!$ret) {
                         echo "Problème de transfert";
                         return false;
-                    }
-                    elseif (isset($_SESSION['url'])){
+                    } elseif (isset($_SESSION['url'])) {
                         $img_nom = $_SESSION['description'];
                         $img_blob = "";
                         $img_taille = strlen($img_blob);
                         $img_type = 'image/jpeg';
-                    }else{
+                    } else {
                         // Le fichier a bien été reçu
                         $img_taille = $_FILES['fic']['size'];
 
@@ -120,10 +133,9 @@ include 'BD/BD.php';
                     if ($row) {
                         echo "Ce CD existe déjà !";
                         return false;
-                    }
-                    else{
+                    } else {
                         // 4 - Lecture du contenu du fichier dans une variable ;
-                        if (isset($_SESSION['url'])){
+                        if (isset($_SESSION['url'])) {
 
                             // Récupération des dimensions de l'image
                             $image_info = getimagesize($_SESSION['url']);
@@ -136,7 +148,7 @@ include 'BD/BD.php';
 
                             unset($_SESSION['url']);
                             unset($_SESSION['description']);
-                        }else{
+                        } else {
 
                             $image_info = getimagesize($_FILES['fic']['tmp_name']);
                             $image_width = $image_info[0];
@@ -145,7 +157,7 @@ include 'BD/BD.php';
                             $image = imagecreatefromstring(file_get_contents($_FILES['fic']['tmp_name']));
                         }
 
-                        
+
                         // Réduction de la taille de l'image
                         $new_width = $image_width / 2;
                         $new_height = $image_height / 2;
@@ -197,21 +209,23 @@ include 'BD/BD.php';
             <h2>Filtre</h2>
             <form>
                 <label for="auteur">Auteur:</label>
-                <input type="text" name="titre" id="titre" <?php if(isset($_GET['titre'])){echo "value='".$_GET['titre']."'";}?>>
-                <label for="genre">Genre :</label>        
+                <input type="text" name="titre" id="titre" <?php if (isset($_GET['titre'])) {
+                                                                echo "value='" . $_GET['titre'] . "'";
+                                                            } ?>>
+                <label for="genre">Genre :</label>
                 <select name="genre" id="genre">
                     <?php
-                    
+
 
                     $req = $db->prepare("SELECT * FROM genre");
                     $req->execute();
                     echo "<option value='Tous'>Tous</option>";
                     while ($row = $req->fetch()) {
                         if (isset($_GET['genre'])) {
-                            if($_GET['genre']==$row['genre_name']){
-                                echo "<option value='".$row['genre_name']."' selected>".$row['genre_name']."</option>";
-                            }else{
-                                echo "<option value='".$row['genre_name']."'>".$row['genre_name']."</option>";
+                            if ($_GET['genre'] == $row['genre_name']) {
+                                echo "<option value='" . $row['genre_name'] . "' selected>" . $row['genre_name'] . "</option>";
+                            } else {
+                                echo "<option value='" . $row['genre_name'] . "'>" . $row['genre_name'] . "</option>";
                             }
                         } else {
                             echo "<option value='" . $row['genre_name'] . "'>" . $row['genre_name'] . "</option>";
@@ -227,14 +241,30 @@ include 'BD/BD.php';
                         <span class="range-selected"></span>
                     </div>
                     <div class="range-input">
-                        <input type="range" class="min" min="0" max="200" <?php if(isset($_GET['min'])){echo "value='".$_GET['min']."'";}else{echo "value='50'";}?>>
-                        <input type="range" class="max" min="0" max="200" <?php if(isset($_GET['max'])){echo "value='".$_GET['max']."'";}else{echo "value='150'";}?>>
+                        <input type="range" class="min" min="0" max="200" <?php if (isset($_GET['min'])) {
+                                                                                echo "value='" . $_GET['min'] . "'";
+                                                                            } else {
+                                                                                echo "value='50'";
+                                                                            } ?>>
+                        <input type="range" class="max" min="0" max="200" <?php if (isset($_GET['max'])) {
+                                                                                echo "value='" . $_GET['max'] . "'";
+                                                                            } else {
+                                                                                echo "value='150'";
+                                                                            } ?>>
                     </div>
                     <div class="range-price">
                         <label for="min">Min</label>
-                        <input type="number" name="min" <?php if(isset($_GET['min'])){echo "value='".$_GET['min']."'";}else{echo "value='50'";}?>>
+                        <input type="number" name="min" <?php if (isset($_GET['min'])) {
+                                                            echo "value='" . $_GET['min'] . "'";
+                                                        } else {
+                                                            echo "value='50'";
+                                                        } ?>>
                         <label for="max">Max</label>
-                        <input type="number" name="max" <?php if(isset($_GET['max'])){echo "value='".$_GET['max']."'";}else{echo "value='150'";}?>>
+                        <input type="number" name="max" <?php if (isset($_GET['max'])) {
+                                                            echo "value='" . $_GET['max'] . "'";
+                                                        } else {
+                                                            echo "value='150'";
+                                                        } ?>>
                     </div>
                 </div>
                 <script>
@@ -282,14 +312,12 @@ include 'BD/BD.php';
                     let maxRange = parseInt(rangeInput[1].value);
                     range.style.left = (minRange / rangeInput[0].max) * 100 + "%";
                     range.style.right = 100 - (maxRange / rangeInput[1].max) * 100 + "%";
-
-
                 </script>
                 <input type="submit" value="Filtrer">
             </form>
             <?php
             if (isset($_GET['submit']) && $_GET['submit'] == 'Filtrer' && isset($_GET['titre']) && isset($_GET['genre']) && isset($_GET['min']) && isset($_GET['max'])) {
-                header("Location: index.php?titre=".$_GET['titre']."&genre=".$_GET['genre']."&min=".$_GET['min']."&max=".$_GET['max']);
+                header("Location: index.php?titre=" . $_GET['titre'] . "&genre=" . $_GET['genre'] . "&min=" . $_GET['min'] . "&max=" . $_GET['max']);
             }
 
             ?>
@@ -300,28 +328,27 @@ include 'BD/BD.php';
         <article class="shop-grid">
             <?php
             include 'BD/BD.php';
-            if(isset($_GET['titre']) && isset($_GET['genre']) && isset($_GET['min']) && isset($_GET['max'])){
-            
-                if($_GET['genre']=='Tous'){
+            if (isset($_GET['titre']) && isset($_GET['genre']) && isset($_GET['min']) && isset($_GET['max'])) {
+
+                if ($_GET['genre'] == 'Tous') {
                     $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and auteur like :titre and idUser = :idUser");
                     $req->execute(array(
-                        'titre' => '%'.$_GET['titre'].'%',
+                        'titre' => '%' . $_GET['titre'] . '%',
                         'min' => $_GET['min'],
                         'max' => $_GET['max'],
                         'idUser' => $_SESSION['id']
                     ));
-                }else{
+                } else {
                     $req = $db->prepare("SELECT * FROM CD where prix >= :min and prix <= :max and genre = :genre and auteur like :titre and idUser = :idUser");
                     $req->execute(array(
-                    'titre' => '%'.$_GET['titre'].'%',
-                    'min' => $_GET['min'],
-                    'max' => $_GET['max'],
-                    'genre' => strval($_GET['genre']),
-                    'idUser' => $_SESSION['id']
-                ));
+                        'titre' => '%' . $_GET['titre'] . '%',
+                        'min' => $_GET['min'],
+                        'max' => $_GET['max'],
+                        'genre' => strval($_GET['genre']),
+                        'idUser' => $_SESSION['id']
+                    ));
                 }
-
-            }else{
+            } else {
                 $req = $db->prepare("SELECT * FROM CD where idUser = :idUser");
                 $req->execute(array(
                     'idUser' => $_SESSION['id']
@@ -349,4 +376,5 @@ include 'BD/BD.php';
 
     </main>
 </body>
+
 </html>
