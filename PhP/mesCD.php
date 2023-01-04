@@ -50,7 +50,6 @@ include 'BD/BD.php';
                 <input type="text" name="artiste" />
                 <label>Genre : </label>
                 <select name="genre">
-                    <option value="Tous">Tous</option>
                     <?php
                     
 
@@ -79,12 +78,24 @@ include 'BD/BD.php';
                     $img_type   = '';
                     $img_nom    = '';
                     $taille_max = 250000;
-                    $ret        = is_uploaded_file($_FILES['fic']['tmp_name']);
+
+                    // On vérifie si l'utilisateur a généré une image ou en a importé une
+                    if (isset($_SESSION['url'])){
+                        $ret = true;
+                    }else{
+                        $ret = is_uploaded_file($_FILES['fic']['tmp_name']);
+                    }
 
                     if (!$ret) {
                         echo "Problème de transfert";
                         return false;
-                    } else {
+                    }
+                    elseif (isset($_SESSION['url'])){
+                        $img_nom = $_SESSION['description'];
+                        $img_blob = "";
+                        $img_taille = strlen($img_blob);
+                        $img_type = 'image/jpeg';
+                    }else{
                         // Le fichier a bien été reçu
                         $img_taille = $_FILES['fic']['size'];
 
@@ -112,10 +123,22 @@ include 'BD/BD.php';
                     }
                     else{
                         // 4 - Lecture du contenu du fichier dans une variable ;
-                        $img_blob = file_get_contents($_FILES['fic']['tmp_name']);
+                        if (isset($_SESSION['url'])){
+                            // Téléchargement de l'image depuis l'URL
+                            $imageData = file_get_contents($_SESSION['url']);
+                            // Téléchargement du contenu de l'image dans un fichier
+                            file_put_contents('image.jpg', $imageData);
+                            // Récupérer le contenu du fichier
+                            $img_blob = file_get_contents('image.jpg');
+                            // Supprimer le fichier
+                            unlink('image.jpg');
+                            unset($_SESSION['url']);
+                            unset($_SESSION['description']);
+                        }else{
+                            $img_blob = file_get_contents($_FILES['fic']['tmp_name']);
+                        }
 
                         // 5 - Préparation de la requête d'insertion ;
-                        // id incrementable, genre, titre, auteur, prix, image sont les champs de la table CD
                         $req = $db->prepare("INSERT INTO CD (genre, titre, auteur, prix, image, description, quantite, idUser) VALUES (:genre, :titre, :artiste, :prix, :image, :description, :quantite, :idUser)");
 
                         // 6 - Exécution de la requête ;

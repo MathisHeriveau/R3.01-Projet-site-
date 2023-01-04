@@ -13,7 +13,7 @@
         }");
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
-            'Authorization: Bearer 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'
+            'Authorization: Bearer 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'
 
         ));
         try {
@@ -28,6 +28,8 @@
 
             // Affichage de l'imageg
             echo "<img src='$url' alt='image générée'>";
+            $_SESSION['url'] = $url;
+            $_SESSION['description'] = $uneDesc;
 
         }
         catch (Exception $e) {
